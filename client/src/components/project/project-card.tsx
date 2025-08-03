@@ -1,0 +1,105 @@
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Button } from "../ui/button";
+import { Link, useRouter } from "@tanstack/react-router";
+import {
+  ArrowRightIcon,
+  EditIcon,
+  EllipsisVerticalIcon,
+  Trash2Icon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { deleteProject } from "@/lib/client";
+import { DeleteConfirmationDialog } from "../common/delete-dialog";
+import { useState } from "react";
+import {
+  ProjectDialogMode,
+  ProjectDialog,
+} from "@/components/project/project-dialog";
+
+interface ProjectCardProps extends React.ComponentProps<"div"> {
+  project: {
+    id: string;
+    name: string;
+    description?: string;
+  };
+}
+
+export function ProjectCard({ project, className }: ProjectCardProps) {
+  const router = useRouter();
+  const onDelete = () => {
+    deleteProject(project.id);
+    router.invalidate();
+  };
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  return (
+    <Card className={cn(className)}>
+      <CardHeader className="flex justify-between items-center">
+        <h4 className="text-lg font-semibold leading-none tracking-tight">
+          {project.name}
+        </h4>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="outline" className="p-0">
+              <EllipsisVerticalIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpenEditDialog(true);
+              }}
+            >
+              <EditIcon />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpenDeleteDialog(true);
+              }}
+            >
+              <Trash2Icon />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardHeader>
+      <CardContent>{project.description}</CardContent>
+      <CardFooter className="flex justify-end w-full">
+        <Button asChild>
+          <Link
+            to="/projects/$projectId/workbench"
+            params={{ projectId: project.id }}
+            preload="intent"
+          >
+            <ArrowRightIcon />
+          </Link>
+        </Button>
+      </CardFooter>
+      <ProjectDialog
+        mode={ProjectDialogMode.Edit}
+        project={project}
+        open={openEditDialog}
+        setOpen={setOpenEditDialog}
+      />
+      <DeleteConfirmationDialog
+        open={openDeleteDialog}
+        description={project?.description}
+        title={`Delete project '${project.name}' ?`}
+        onOpenChange={setOpenDeleteDialog}
+        onConfirm={onDelete}
+      />
+    </Card>
+  );
+}

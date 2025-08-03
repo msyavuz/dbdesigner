@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "bun --watch run src/index.ts & tsc --watch",
+    "schema:auth": "npx @better-auth/cli@latest generate --output ./src/db/auth-schema.ts -y",
+    "schema:db": "npx drizzle-kit generate && npx drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.5.2",
+    "@hono/zod-validator": "^0.7.2",
+    "@libsql/client": "^0.15.9",
+    "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.44.2",
+    "hono": "^4.7.11",
+    "shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.31.4",
+    "tsx": "^4.20.3"
+  }
+}

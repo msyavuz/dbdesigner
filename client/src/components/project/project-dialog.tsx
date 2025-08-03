@@ -1,0 +1,143 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { newProjectSchema } from "shared";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { createProject, updateProject } from "@/lib/client";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "@tanstack/react-router";
+
+export enum ProjectDialogMode {
+  Create = "create",
+  Edit = "edit",
+}
+
+type Project = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
+type CommonProjectDialogProps = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+type EditProjectDialogProps = CommonProjectDialogProps & {
+  mode: ProjectDialogMode.Edit;
+  project: Project;
+};
+type CreateProjectDialogProps = CommonProjectDialogProps & {
+  mode: ProjectDialogMode.Create;
+};
+
+type ProjectDialogProps = CreateProjectDialogProps | EditProjectDialogProps;
+
+export function ProjectDialog(props: ProjectDialogProps) {
+  const mode = props.mode;
+  const form = useForm<z.infer<typeof newProjectSchema>>({
+    resolver: zodResolver(newProjectSchema),
+    defaultValues: {
+      name: mode === "edit" ? props.project.name : "",
+      description: mode === "edit" ? props.project.description : "",
+    },
+  });
+
+  const router = useRouter();
+
+  async function onSubmit(data: z.infer<typeof newProjectSchema>) {
+    switch (mode) {
+      case ProjectDialogMode.Create:
+        await createProject(data);
+        break;
+      case ProjectDialogMode.Edit:
+        await updateProject(props.project.id, data);
+        break;
+    }
+    router.invalidate();
+    props.setOpen(false);
+  }
+
+  return (
+    <Dialog open={props.open} onOpenChange={props.setOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {mode === ProjectDialogMode.Create
+              ? "Create New Project"
+              : "Edit Project" + props.project.name}
+          </DialogTitle>
+          <DialogDescription>
+            {mode === ProjectDialogMode.Create
+              ? "Create a new project to start designing your database."
+              : `Edit the details of the project '${props.project.name}'.`}
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Project name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Project description</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+        <DialogFooter className="justify-end">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Cancel
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              type="submit"
+              variant="default"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              Save
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
