@@ -25,6 +25,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDesign } from "@/hooks/use-design";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function NewTableDialog() {
   const form = useForm<TableValues>({
@@ -51,16 +52,31 @@ export function NewTableDialog() {
       tables: [...design.tables, { ...data, position: { x: 0, y: 0 } }],
     };
     updateDesign(newDesign);
-    console.log("NewTableDialog - Submitted newDesign:", newDesign);
     setOpen(false);
-    console.log("Form submitted successfully! Data:", { data });
   };
 
   const onError = (errors: FieldErrors<TableValues>) => {
-    console.error("Form validation failed! Errors:", errors);
+    toast.error(
+      `Error creating table: ${Object.values(errors)
+        .map((error) => error.message)
+        .join(", ")}`,
+    );
   };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      form.reset({
+        id: randomUUIDv7(),
+        name: "",
+        description: "",
+        columns: [],
+      });
+    }
+    setOpen(isOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button type="button">New table</Button>
       </DialogTrigger>

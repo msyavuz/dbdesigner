@@ -50,7 +50,14 @@ export function LoginForm({
       password,
     });
     if (error && error?.status === 401) {
-      toast.error("Unauthorized. Please try again or sign up.");
+      switch (error.status) {
+        case 401:
+          toast.error("Invalid email or password.");
+          break;
+        default:
+          toast.error("An error occurred. Please try again.");
+          break;
+      }
       return;
     }
     if (redirect) {

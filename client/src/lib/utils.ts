@@ -33,6 +33,8 @@ export function designToEdges(design: Design): Edge[] {
       id: rel.id,
       source: rel.fromTable,
       target: rel.toTable,
+      sourceHandle: `source.${rel.fromTable}.${rel.fromColumn}`,
+      targetHandle: `target.${rel.toTable}.${rel.toColumn}`,
       label: `${fromTable?.name}.${fromColumnName} → ${toTable?.name}.${toColumnName}`,
       type: "default",
     };

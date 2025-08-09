@@ -61,7 +61,7 @@ export function TableNode({ data: { table } }: NodeProps<TableNode>) {
                   <Handle
                     type="target"
                     position={Position.Left}
-                    id={`target.${column.id}`}
+                    id={`target.${table.id}.${column.id}`}
                     className="!w-4 !h-4 !left-[-4px]"
                   />
                   {column.name}
@@ -71,7 +71,7 @@ export function TableNode({ data: { table } }: NodeProps<TableNode>) {
                   <Handle
                     type="source"
                     position={Position.Right}
-                    id={`source.${column.id}`}
+                    id={`source.${table.id}.${column.id}`}
                     className="!w-4 !h-4 !right-[-10px]"
                   />
                 </TableCell>

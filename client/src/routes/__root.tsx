@@ -10,7 +10,7 @@ function RouteComponent() {
   return (
     <ThemeProvider>
       <Outlet />
-      <Toaster />
+      <Toaster richColors />
       {/* <TanStackRouterDevtools position="bottom-right" /> */}
     </ThemeProvider>
   );

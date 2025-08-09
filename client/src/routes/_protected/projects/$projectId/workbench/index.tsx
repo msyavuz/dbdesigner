@@ -56,10 +56,8 @@ function RouteComponent() {
   );
   const onConnect: OnConnect = useCallback(
     (params) => {
-      console.log({ params });
-
-      const sourceColumnId = params.sourceHandle?.split(".")[1];
-      const targetColumnId = params.targetHandle?.split(".")[1];
+      const sourceColumnId = params.sourceHandle?.split(".")[2];
+      const targetColumnId = params.targetHandle?.split(".")[2];
       if (!sourceColumnId || !targetColumnId) {
         return;
       }

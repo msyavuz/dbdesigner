@@ -28,67 +28,46 @@ interface SignupFormProps extends React.ComponentProps<"div"> {
   redirect?: string;
 }
 
-export function SignupForm({
-  className,
-  redirect,
-  children,
-  ...props
-}: SignupFormProps) {
+export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: "",
       username: "",
+      email: "",
       password: "",
     },
   });
 
   const navigate = useNavigate({ from: "/auth/signup" });
 
-  async function onSubmit({
-    email,
-    password,
-    username,
-  }: z.infer<typeof signupSchema>) {
+  async function onSubmit(values: z.infer<typeof signupSchema>) {
     const { error } = await signUp.email({
-      email,
-      password,
-      name: username,
+      email: values.email,
+      password: values.password,
+      name: values.username,
     });
     if (error) {
       toast.error("Signup failed. Please try again.");
       return;
     }
-    toast("Signup successful! Redirecting...");
-    if (redirect) {
-      navigate({ to: redirect });
-    } else {
-      navigate({ to: "/auth/login" });
-    }
+    navigate({ to: redirect || "/auth/login" });
   }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle>Signup to create a new account</CardTitle>
-          <CardDescription>Enter an email and password below.</CardDescription>
+          <CardDescription>Enter your details below.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="email" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+              autoComplete="on"
+              method="post"
+            >
               <FormField
                 control={form.control}
                 name="username"
@@ -96,25 +75,56 @@ export function SignupForm({
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        name="username"
+                        type="text"
+                        autoComplete="username"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="grid-gap-3">
+                  <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input
+                        {...field}
+                        name="password"
+                        type="password"
+                        autoComplete="new-password"
+                      />
                     </FormControl>
-                    <FormMessage about="asd" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
               <Button type="submit" className="w-full">
                 Signup
               </Button>

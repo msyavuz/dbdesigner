@@ -23,9 +23,16 @@ export const DesignProvider = ({ children }: PropsWithChildren) => {
     if (data.design) {
       try {
         const parsed = JSON.parse(data.design);
-        setDesign(parsed);
+        const safeDesign = {
+          ...defaultDesign,
+          ...parsed,
+          tables: parsed.tables || [],
+          relationships: parsed.relationships || [],
+        };
+        setDesign(safeDesign);
       } catch (err) {
         console.error("Invalid design JSON:", err);
+        setDesign(defaultDesign);
       }
     }
   }, [data.design]);
