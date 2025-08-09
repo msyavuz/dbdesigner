@@ -1,0 +1,1 @@
+ALTER TABLE `projects` ADD `ai_conversation` text DEFAULT '' NOT NULL;

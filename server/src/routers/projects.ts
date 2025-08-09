@@ -8,7 +8,7 @@ import { zValidator } from "@hono/zod-validator";
 import { newProjectSchema, updateProjectSchema } from "shared";
 import { defaultDesign } from "@server/utils";
 
-const projectIdSchema = z.object({
+export const projectIdSchema = z.object({
   id: z.uuidv7(),
 });
 

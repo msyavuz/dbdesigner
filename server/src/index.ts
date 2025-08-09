@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { authMiddlewareHandler } from "./middlewares";
-import { authRouter, docsRouter, projectsRouter } from "./routers";
+import { authRouter, docsRouter, projectsRouter, aiRouter } from "./routers";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 
@@ -30,6 +30,7 @@ const app = new Hono<{
 
 export const routes = app
   .route("/projects", projectsRouter)
+  .route("/ai", aiRouter)
   .route("/", docsRouter);
 
 export default app;

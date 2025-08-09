@@ -1,0 +1,76 @@
+import { zValidator } from "@hono/zod-validator";
+import type { WithAuth } from "@server/lib/types";
+import { Hono } from "hono";
+import { streamText } from "hono/streaming";
+import { projectIdSchema } from "./projects";
+import { aiClient, getInitialPrompt } from "@server/lib/ai";
+import { db } from "@server/db";
+import { projects } from "@server/db/schemas/projects-schema";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+
+const newMessageSchema = z.object({
+  message: z.string(),
+});
+
+export const aiRouter = new Hono<WithAuth>().post(
+  "/:id/ai",
+  zValidator("param", projectIdSchema),
+  zValidator("json", newMessageSchema),
+  async (c) => {
+    const { id: projectId } = c.req.param();
+    const message = c.req.valid("json").message;
+    const data = await db
+      .select()
+      .from(projects)
+      .where(eq(projects.id, projectId))
+      .limit(1);
+
+    if (!data[0]) {
+      return c.json(
+        { error: "Project not found or you do not have access" },
+        { status: 404 },
+      );
+    }
+    const design = data[0].design;
+    const initialPrompt = getInitialPrompt(design);
+    const previousConversations = JSON.parse(data[0].aiConversation);
+    if (previousConversations.length === 0) {
+      previousConversations.push({
+        role: "system",
+        content: initialPrompt,
+      });
+    }
+
+    return streamText(c, async (stream) => {
+      let assistantResponse = "";
+      const openaiStream = await aiClient.responses.create({
+        model: "gpt-4.1-nano",
+        input: [
+          { role: "system", content: getInitialPrompt(design) },
+          ...previousConversations,
+          { role: "user", content: message },
+        ],
+        stream: true,
+      });
+      for await (const event of openaiStream) {
+        if (event.type === "response.output_text.delta") {
+          const chunk = event.delta || "";
+          assistantResponse += chunk;
+          await stream.write(chunk);
+        }
+      }
+      previousConversations.push({
+        role: "assistant",
+        content: assistantResponse,
+      });
+
+      await db
+        .update(projects)
+        .set({
+          aiConversation: JSON.stringify(previousConversations),
+        })
+        .where(eq(projects.id, projectId));
+    });
+  },
+);

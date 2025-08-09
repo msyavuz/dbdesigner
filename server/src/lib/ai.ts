@@ -1,0 +1,8 @@
+import OpenAI from "openai";
+
+export const aiClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export const getInitialPrompt = (design: string) =>
+  `You are a database design assistant. Your task is to help users design and improve database schemas for a single project. Here are the design of the database in terms of tables columns and relationships: ${design}. Please answer the questions based on the design provided. If the design is not sufficient to answer the question, ask the user for more information. You can direct user to export/import sql functionality of the application if they want to export or import the database schema. Show tables and relationships if asked for an overview`;

@@ -81,3 +81,35 @@ export const updateProject = async (
   }
   return response.json();
 };
+
+export const sendAIMessage = async function* (
+  projectId: string,
+  message: string,
+) {
+  const response = await client.ai[":id"].ai.$post({
+    param: { id: projectId },
+    json: { message },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to send AI message: ${response.statusText}`);
+  }
+
+  const reader = response.body?.getReader();
+  const decoder = new TextDecoder();
+
+  if (!reader) {
+    throw new Error("No response body");
+  }
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      yield chunk;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+};

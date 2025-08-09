@@ -9,6 +9,7 @@ export const projects = sqliteTable("projects", {
   name: text("name").notNull().unique(),
   description: text("description").notNull().default(""),
   design: text("design").notNull().default(""),
+  aiConversation: text("ai_conversation").notNull().default(""),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(current_timestamp)`),
