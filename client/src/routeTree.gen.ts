@@ -18,6 +18,7 @@ import { Route as ProtectedProjectsIndexRouteImport } from './routes/_protected/
 import { Route as ProtectedProjectsProjectIdRouteRouteImport } from './routes/_protected/projects/$projectId/route'
 import { Route as ProtectedProjectsProjectIdIndexRouteImport } from './routes/_protected/projects/$projectId/index'
 import { Route as ProtectedProjectsProjectIdWorkbenchIndexRouteImport } from './routes/_protected/projects/$projectId/workbench/index'
+import { Route as ProtectedProjectsProjectIdTablesIndexRouteImport } from './routes/_protected/projects/$projectId/tables/index'
 import { Route as ProtectedProjectsProjectIdAiIndexRouteImport } from './routes/_protected/projects/$projectId/ai/index'
 
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
@@ -67,6 +68,12 @@ const ProtectedProjectsProjectIdWorkbenchIndexRoute =
     path: '/workbench/',
     getParentRoute: () => ProtectedProjectsProjectIdRouteRoute,
   } as any)
+const ProtectedProjectsProjectIdTablesIndexRoute =
+  ProtectedProjectsProjectIdTablesIndexRouteImport.update({
+    id: '/tables/',
+    path: '/tables/',
+    getParentRoute: () => ProtectedProjectsProjectIdRouteRoute,
+  } as any)
 const ProtectedProjectsProjectIdAiIndexRoute =
   ProtectedProjectsProjectIdAiIndexRouteImport.update({
     id: '/ai/',
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupIndexRoute
   '/projects/$projectId/': typeof ProtectedProjectsProjectIdIndexRoute
   '/projects/$projectId/ai': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/projects/$projectId/tables': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/projects/$projectId/workbench': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +101,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupIndexRoute
   '/projects/$projectId': typeof ProtectedProjectsProjectIdIndexRoute
   '/projects/$projectId/ai': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/projects/$projectId/tables': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/projects/$projectId/workbench': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
 export interface FileRoutesById {
@@ -106,6 +115,7 @@ export interface FileRoutesById {
   '/auth/signup/': typeof AuthSignupIndexRoute
   '/_protected/projects/$projectId/': typeof ProtectedProjectsProjectIdIndexRoute
   '/_protected/projects/$projectId/ai/': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/_protected/projects/$projectId/tables/': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/_protected/projects/$projectId/workbench/': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
 export interface FileRouteTypes {
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/projects/$projectId/'
     | '/projects/$projectId/ai'
+    | '/projects/$projectId/tables'
     | '/projects/$projectId/workbench'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/projects/$projectId'
     | '/projects/$projectId/ai'
+    | '/projects/$projectId/tables'
     | '/projects/$projectId/workbench'
   id:
     | '__root__'
@@ -141,6 +153,7 @@ export interface FileRouteTypes {
     | '/auth/signup/'
     | '/_protected/projects/$projectId/'
     | '/_protected/projects/$projectId/ai/'
+    | '/_protected/projects/$projectId/tables/'
     | '/_protected/projects/$projectId/workbench/'
   fileRoutesById: FileRoutesById
 }
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProjectsProjectIdWorkbenchIndexRouteImport
       parentRoute: typeof ProtectedProjectsProjectIdRouteRoute
     }
+    '/_protected/projects/$projectId/tables/': {
+      id: '/_protected/projects/$projectId/tables/'
+      path: '/tables'
+      fullPath: '/projects/$projectId/tables'
+      preLoaderRoute: typeof ProtectedProjectsProjectIdTablesIndexRouteImport
+      parentRoute: typeof ProtectedProjectsProjectIdRouteRoute
+    }
     '/_protected/projects/$projectId/ai/': {
       id: '/_protected/projects/$projectId/ai/'
       path: '/ai'
@@ -230,6 +250,7 @@ declare module '@tanstack/react-router' {
 interface ProtectedProjectsProjectIdRouteRouteChildren {
   ProtectedProjectsProjectIdIndexRoute: typeof ProtectedProjectsProjectIdIndexRoute
   ProtectedProjectsProjectIdAiIndexRoute: typeof ProtectedProjectsProjectIdAiIndexRoute
+  ProtectedProjectsProjectIdTablesIndexRoute: typeof ProtectedProjectsProjectIdTablesIndexRoute
   ProtectedProjectsProjectIdWorkbenchIndexRoute: typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
 
@@ -238,6 +259,8 @@ const ProtectedProjectsProjectIdRouteRouteChildren: ProtectedProjectsProjectIdRo
     ProtectedProjectsProjectIdIndexRoute: ProtectedProjectsProjectIdIndexRoute,
     ProtectedProjectsProjectIdAiIndexRoute:
       ProtectedProjectsProjectIdAiIndexRoute,
+    ProtectedProjectsProjectIdTablesIndexRoute:
+      ProtectedProjectsProjectIdTablesIndexRoute,
     ProtectedProjectsProjectIdWorkbenchIndexRoute:
       ProtectedProjectsProjectIdWorkbenchIndexRoute,
   }

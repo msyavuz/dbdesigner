@@ -9,7 +9,12 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/react-router";
-import { ArrowLeftIcon, PencilRulerIcon, SparklesIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  PencilRulerIcon,
+  SparklesIcon,
+  TableIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_protected/projects/$projectId")({
   component: RouteComponent,
@@ -27,6 +32,11 @@ const items: SidebarItem[] = [
     title: "Workbench",
     icon: PencilRulerIcon,
     url: "/projects/$projectId/workbench",
+  },
+  {
+    title: "Tables",
+    icon: TableIcon,
+    url: "/projects/$projectId/tables",
   },
   {
     title: "Ai",
