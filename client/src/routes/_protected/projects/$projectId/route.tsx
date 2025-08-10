@@ -1,6 +1,6 @@
 import { AppSidebar, type SidebarItem } from "@/components/common/app-sidebar";
 import { Button } from "@/components/ui/button";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { DesignProvider } from "@/hooks/use-design";
 import { fetchProject } from "@/lib/client";
 import {
@@ -73,7 +73,6 @@ function RouteComponent() {
         />
         <main className="flex h-screen w-full flex-col overflow-hidden ">
           <Outlet />
-          <SidebarTrigger className="absolute bottom-4" />
         </main>
       </SidebarProvider>
     </DesignProvider>

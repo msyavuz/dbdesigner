@@ -13,7 +13,38 @@ const newMessageSchema = z.object({
   message: z.string(),
 });
 
-export const aiRouter = new Hono<WithAuth>().post(
+export const aiRouter = new Hono<WithAuth>()
+  .get(
+    "/:id/ai",
+    zValidator("param", projectIdSchema),
+    async (c) => {
+      const { id: projectId } = c.req.param();
+      const data = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.id, projectId))
+        .limit(1);
+
+      if (!data[0]) {
+        return c.json(
+          { error: "Project not found or you do not have access" },
+          { status: 404 },
+        );
+      }
+
+      const conversations = data[0].aiConversation 
+        ? JSON.parse(data[0].aiConversation)
+        : [];
+      
+      // Filter out system messages for frontend display
+      const userConversations = conversations.filter(
+        (msg: any) => msg.role !== "system"
+      );
+
+      return c.json({ conversations: userConversations });
+    },
+  )
+  .post(
   "/:id/ai",
   zValidator("param", projectIdSchema),
   zValidator("json", newMessageSchema),
@@ -60,6 +91,12 @@ export const aiRouter = new Hono<WithAuth>().post(
           await stream.write(chunk);
         }
       }
+      
+      // Add both user message and assistant response to conversation history
+      previousConversations.push({
+        role: "user",
+        content: message,
+      });
       previousConversations.push({
         role: "assistant",
         content: assistantResponse,

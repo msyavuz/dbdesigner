@@ -3,9 +3,11 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { sendAIMessage } from "@/lib/client";
+import { sendAIMessage, fetchAIConversation } from "@/lib/client";
 import { Send, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const Route = createFileRoute("/_protected/projects/$projectId/ai/")({
   component: RouteComponent,
@@ -31,8 +33,30 @@ function RouteComponent() {
   };
 
   useEffect(() => {
+    const loadConversation = async () => {
+      try {
+        const data = await fetchAIConversation(projectId);
+        if (data.conversations && data.conversations.length > 0) {
+          const formattedMessages: Message[] = data.conversations.map(
+            (msg: any, index: number) => ({
+              id: `history-${index}`,
+              role: msg.role,
+              content: msg.content,
+            }),
+          );
+          setMessages(formattedMessages);
+        }
+      } catch (error) {
+        console.error("Failed to load conversation history:", error);
+      }
+    };
+
+    loadConversation();
+  }, [projectId]);
+
+  useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +106,7 @@ function RouteComponent() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+    if (e.key === "Enter" && (!e.metaKey || !e.ctrlKey)) {
       handleSubmit(e);
     }
   };
@@ -101,70 +125,70 @@ function RouteComponent() {
 
       <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
         <div className="p-4">
-        <div className="space-y-4">
-          {messages.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Start a conversation about your database design</p>
-            </div>
-          )}
+          <div className="space-y-4">
+            {messages.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Start a conversation about your database design</p>
+              </div>
+            )}
 
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex gap-3",
-                message.role === "user" ? "justify-end" : "justify-start",
-              )}
-            >
-              {message.role === "assistant" && (
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Bot className="w-4 h-4" />
-                  </div>
-                </div>
-              )}
-
+            {messages.map((message) => (
               <div
+                key={message.id}
                 className={cn(
-                  "max-w-[70%] rounded-lg p-3",
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground ml-auto"
-                    : "bg-muted",
+                  "flex gap-3",
+                  message.role === "user" ? "justify-end" : "justify-start",
                 )}
               >
-                {message.role === "assistant" &&
-                message.content === "" &&
-                isLoading ? (
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-current rounded-full animate-pulse"></div>
-                    <div
-                      className="w-2 h-2 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
+                {message.role === "assistant" && (
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Bot className="w-4 h-4" />
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-sm whitespace-pre-wrap">
-                    {message.content}
-                  </p>
+                )}
+
+                <div
+                  className={cn(
+                    "max-w-[70%] rounded-lg p-3",
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground ml-auto"
+                      : "bg-muted",
+                  )}
+                >
+                  {message.role === "assistant" &&
+                  message.content === "" &&
+                  isLoading ? (
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-current rounded-full animate-pulse"></div>
+                      <div
+                        className="w-2 h-2 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                  ) : (
+                    <Markdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </Markdown>
+                  )}
+                </div>
+
+                {message.role === "user" && (
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="w-4 h-4" />
+                    </div>
+                  </div>
                 )}
               </div>
-
-              {message.role === "user" && (
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="w-4 h-4" />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <div ref={messagesEndRef} />
+            ))}
+          </div>
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
@@ -193,9 +217,6 @@ function RouteComponent() {
             <Send className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground mt-2">
-          Press Ctrl+Enter to send
-        </p>
       </form>
     </div>
   );

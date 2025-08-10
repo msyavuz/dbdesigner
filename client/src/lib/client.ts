@@ -82,6 +82,16 @@ export const updateProject = async (
   return response.json();
 };
 
+export const fetchAIConversation = async (projectId: string) => {
+  const response = await client.ai[":id"].ai.$get({
+    param: { id: projectId },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch conversation: ${response.statusText}`);
+  }
+  return response.json();
+};
+
 export const sendAIMessage = async function* (
   projectId: string,
   message: string,
