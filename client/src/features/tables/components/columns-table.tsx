@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { v7 as randomUUIDv7 } from "uuid";
-import { getColumns } from "./utils";
+import { getColumns } from "./columns-utils";
 import { Column, TableValues } from "shared";
 import {
   Control,

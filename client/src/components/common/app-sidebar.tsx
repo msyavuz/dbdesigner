@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link, LinkProps } from "@tanstack/react-router";
-import { UserProfile } from "../user/user-profile";
+import { UserProfile } from "@/features/auth/components/user-profile";
 
 export type SidebarItem = {
   title: string;

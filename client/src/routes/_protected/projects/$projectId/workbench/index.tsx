@@ -20,7 +20,7 @@ import {
   nodeTypes,
 } from "@/lib/utils";
 import type { ForeignKey, Design } from "shared";
-import { WorkbenchControls } from "@/components/workbench/workbench-controls";
+import { WorkbenchControls } from "@/features/workbench/components/workbench-controls";
 import { useDesign } from "@/hooks/use-design";
 import { v7 as randomUUIDv7 } from "uuid";
 

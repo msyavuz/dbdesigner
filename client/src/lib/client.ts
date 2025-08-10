@@ -8,7 +8,7 @@ export const client = hcWithType(SERVER_URL, {
       ...init,
       credentials: "include",
     });
-    //@ts-ignore
+    //@ts-expect-error - satisfies clause requires ignoring type checking
   }) satisfies typeof fetch,
 });
 

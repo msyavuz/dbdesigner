@@ -1,6 +1,6 @@
-import { ProjectDialogMode, ProjectDialog } from "@/components/project/project-dialog";
-import { ProjectCard } from "@/components/project/project-card";
-import { UserProfile } from "@/components/user/user-profile";
+import { ProjectDialogMode, ProjectDialog } from "@/features/projects/components/project-dialog";
+import { ProjectCard } from "@/features/projects/components/project-card";
+import { UserProfile } from "@/features/auth/components/user-profile";
 import { fetchProjects } from "@/lib/client";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";

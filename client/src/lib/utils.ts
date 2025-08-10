@@ -3,7 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import { Design, ForeignKey, Table } from "shared";
 import { twMerge } from "tailwind-merge";
 import { merge } from "lodash/fp";
-import { TableNode } from "@/components/workbench/table-node";
+import { TableNode } from "@/features/workbench/components/table-node";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

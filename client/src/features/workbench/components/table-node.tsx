@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
 import { Design, TableValues } from "shared";
 import {
   Table,
@@ -15,9 +15,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
 import { useDesign } from "@/hooks/use-design";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 
 export type TableNode = Node<{
