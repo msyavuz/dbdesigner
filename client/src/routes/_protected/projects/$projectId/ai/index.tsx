@@ -88,8 +88,8 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-screen">
-      <div className="border-b p-4">
+    <div className="flex flex-col h-screen">
+      <div className="border-b p-4 flex-shrink-0">
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <Bot className="w-5 h-5" />
           AI Assistant
@@ -99,7 +99,8 @@ function RouteComponent() {
         </p>
       </div>
 
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+      <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
+        <div className="p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
@@ -164,15 +165,16 @@ function RouteComponent() {
           ))}
         </div>
         <div ref={messagesEndRef} />
+        </div>
       </ScrollArea>
 
       {error && (
-        <div className="p-4 bg-destructive/10 border-t border-destructive/20">
+        <div className="p-4 bg-destructive/10 border-t border-destructive/20 flex-shrink-0">
           <p className="text-sm text-destructive">{error}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="p-4 border-t">
+      <form onSubmit={handleSubmit} className="p-4 border-t flex-shrink-0">
         <div className="flex gap-2">
           <Textarea
             value={input}
