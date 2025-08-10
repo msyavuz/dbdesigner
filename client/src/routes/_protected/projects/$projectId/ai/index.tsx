@@ -204,7 +204,7 @@ function RouteComponent() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about your database design... (Ctrl+Enter to send)"
+            placeholder="Ask about your database design..."
             className="min-h-[44px] resize-none"
             disabled={isLoading}
           />
