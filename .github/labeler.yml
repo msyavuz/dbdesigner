@@ -1,0 +1,16 @@
+############################################
+# Areas of the main codebase
+############################################
+
+server:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'server/**'
+client:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'client/**'
+shared:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'shared/**'
