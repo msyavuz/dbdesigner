@@ -7,7 +7,10 @@
     "build": "tsc",
     "dev": "bun --watch run src/index.ts & tsc --watch",
     "schema:auth": "npx @better-auth/cli@latest generate --output ./src/db/auth-schema.ts -y",
-    "schema:db": "npx drizzle-kit generate && npx drizzle-kit migrate"
+    "schema:db": "npx drizzle-kit generate && npx drizzle-kit migrate",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.2",
@@ -21,7 +24,9 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@vitest/ui": "^3.2.4",
     "drizzle-kit": "^0.31.4",
-    "tsx": "^4.20.3"
+    "tsx": "^4.20.3",
+    "vitest": "^3.2.4"
   }
 }
