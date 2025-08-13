@@ -10,7 +10,8 @@
     "schema:db": "npx drizzle-kit generate && npx drizzle-kit migrate",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "type": "tsc -b"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.2",
