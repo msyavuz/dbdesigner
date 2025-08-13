@@ -11,7 +11,7 @@ export const client = hcWithType(SERVER_URL, {
     });
     //@ts-ignore - satisfies clause requires ignoring type checking
   }) satisfies typeof fetch,
-});
+}).api;
 
 export type ProjectsResponseType = Awaited<
   ReturnType<typeof client.projects.$get>
