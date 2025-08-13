@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@tanstack/react-router";
 import {
   ArrowRightIcon,
@@ -13,14 +13,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { deleteProject } from "@/lib/client";
-import { DeleteConfirmationDialog } from "../common/delete-dialog";
+import { DeleteConfirmationDialog } from "@/components/common/delete-dialog";
 import { useState } from "react";
 import {
   ProjectDialogMode,
   ProjectDialog,
-} from "@/components/project/project-dialog";
+} from "@/features/projects/components/project-dialog";
 
 interface ProjectCardProps extends React.ComponentProps<"div"> {
   project: {
@@ -52,7 +52,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setOpenEditDialog(true);
@@ -63,7 +63,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setOpenDeleteDialog(true);

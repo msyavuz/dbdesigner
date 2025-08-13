@@ -1,8 +1,8 @@
 import { CheckIcon, FullscreenIcon, SaveIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useHotkeys } from "@mantine/hooks";
-import { NewTableDialog } from "../table/new-table-dialog";
+import { NewTableDialog } from "@/features/tables/components/new-table-dialog";
 
 interface WorkbenchControlsProps {
   isClean: boolean;

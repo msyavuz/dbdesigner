@@ -1,0 +1,3 @@
+[submodule ".github/actions/pr-lint-action"]
+	path = .github/actions/pr-lint-action
+	url = https://github.com/morrisoncole/pr-lint-action

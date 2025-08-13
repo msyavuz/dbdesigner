@@ -1,9 +1,16 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { authMiddlewareHandler } from "./middlewares";
-import { authRouter, docsRouter, projectsRouter, aiRouter } from "./routers";
+import {
+  authRouter,
+  docsRouter,
+  projectsRouter,
+  aiRouter,
+  healthRouter,
+} from "./routers";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
+import { showRoutes } from "hono/dev";
 
 export type Bindings = {
   DB_FILE_NAME: string;
@@ -12,6 +19,7 @@ export type Bindings = {
 const app = new Hono<{
   Bindings: Bindings;
 }>()
+  .basePath("/api")
   .use(
     "*",
     cors({
@@ -25,6 +33,7 @@ const app = new Hono<{
   .use(logger())
   .use(prettyJSON())
   .options("*", (c) => c.text("OK"))
+  .route("/health", healthRouter)
   .route("/", authRouter)
   .use("*", authMiddlewareHandler);
 

@@ -38,7 +38,7 @@ function RouteComponent() {
         const data = await fetchAIConversation(projectId);
         if (data.conversations && data.conversations.length > 0) {
           const formattedMessages: Message[] = data.conversations.map(
-            (msg: any, index: number) => ({
+            (msg: { role: string; content: string }, index: number) => ({
               id: `history-${index}`,
               role: msg.role,
               content: msg.content,

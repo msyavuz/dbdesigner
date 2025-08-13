@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/user/login-form";
+import { LoginForm } from "@/features/auth/components/login-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 

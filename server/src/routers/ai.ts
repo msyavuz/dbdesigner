@@ -3,7 +3,7 @@ import type { WithAuth } from "@server/lib/types";
 import { Hono } from "hono";
 import { streamText } from "hono/streaming";
 import { projectIdSchema } from "./projects";
-import { aiClient, getInitialPrompt } from "@server/lib/ai";
+import { getAiClient, getInitialPrompt } from "@server/lib/ai";
 import { db } from "@server/db";
 import { projects } from "@server/db/schemas/projects-schema";
 import { eq } from "drizzle-orm";
@@ -75,7 +75,7 @@ export const aiRouter = new Hono<WithAuth>()
 
     return streamText(c, async (stream) => {
       let assistantResponse = "";
-      const openaiStream = await aiClient.responses.create({
+      const openaiStream = await getAiClient().responses.create({
         model: "gpt-4.1-nano",
         input: [
           { role: "system", content: getInitialPrompt(design) },

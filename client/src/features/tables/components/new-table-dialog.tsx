@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ColumnsDataTable } from "./columns/columns-table";
+import { ColumnsDataTable } from "./columns-table";
 import { Design, tableSchema, TableValues } from "shared";
 import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
 import { v7 as randomUUIDv7 } from "uuid";
@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDesign } from "@/hooks/use-design";
 import { useState } from "react";

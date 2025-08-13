@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -22,6 +23,15 @@ export default defineConfig({
       "@server": path.resolve(__dirname, "../server/src"),
       "@shared": path.resolve(__dirname, "../shared/src"),
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./src/test-setup.ts"],
+    coverage: {
+      provider: "v8",
     },
   },
 });

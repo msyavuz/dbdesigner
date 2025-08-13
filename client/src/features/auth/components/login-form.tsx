@@ -31,7 +31,6 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 export function LoginForm({
   className,
   redirect,
-  children,
   ...props
 }: LoginFormProps) {
   const form = useForm<z.infer<typeof loginSchema>>({

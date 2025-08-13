@@ -1,4 +1,4 @@
-import { SignupForm } from "@/components/user/signup-form";
+import { SignupForm } from "@/features/auth/components/signup-form";
 import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 

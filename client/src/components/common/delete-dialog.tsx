@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,8 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
 
-interface DeleteConfirmationDialogProps {
+export interface DeleteConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -30,11 +30,10 @@ export function DeleteConfirmationDialog({
   isLoading = false,
   itemName,
 }: DeleteConfirmationDialogProps) {
-  const [confirmText, setConfirmText] = React.useState("");
+  const [confirmText, setConfirmText] = useState("");
   const isConfirmValid = confirmText === "Delete";
 
-  // Reset confirmation text when dialog opens/closes
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) {
       setConfirmText("");
     }

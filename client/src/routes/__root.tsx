@@ -1,17 +1,5 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 
 export const Route = createRootRoute({
-  component: () => <RouteComponent />,
+  component: () => <Outlet />,
 });
-
-function RouteComponent() {
-  return (
-    <ThemeProvider>
-      <Outlet />
-      <Toaster richColors />
-      {/* <TanStackRouterDevtools position="bottom-right" /> */}
-    </ThemeProvider>
-  );
-}

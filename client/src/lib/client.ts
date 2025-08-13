@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { hcWithType } from "server/dist/client";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
@@ -8,9 +9,9 @@ export const client = hcWithType(SERVER_URL, {
       ...init,
       credentials: "include",
     });
-    //@ts-ignore
+    //@ts-ignore - satisfies clause requires ignoring type checking
   }) satisfies typeof fetch,
-});
+}).api;
 
 export type ProjectsResponseType = Awaited<
   ReturnType<typeof client.projects.$get>
