@@ -1,5 +1,5 @@
-import { isAuthenticated } from "@/lib/auth-client";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { isAuthenticated } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,

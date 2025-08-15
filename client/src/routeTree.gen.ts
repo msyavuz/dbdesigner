@@ -19,6 +19,8 @@ import { Route as ProtectedProjectsProjectIdRouteRouteImport } from './routes/_p
 import { Route as ProtectedProjectsProjectIdIndexRouteImport } from './routes/_protected/projects/$projectId/index'
 import { Route as ProtectedProjectsProjectIdWorkbenchIndexRouteImport } from './routes/_protected/projects/$projectId/workbench/index'
 import { Route as ProtectedProjectsProjectIdTablesIndexRouteImport } from './routes/_protected/projects/$projectId/tables/index'
+import { Route as ProtectedProjectsProjectIdRelationshipsIndexRouteImport } from './routes/_protected/projects/$projectId/relationships/index'
+import { Route as ProtectedProjectsProjectIdExportIndexRouteImport } from './routes/_protected/projects/$projectId/export/index'
 import { Route as ProtectedProjectsProjectIdAiIndexRouteImport } from './routes/_protected/projects/$projectId/ai/index'
 
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
@@ -74,6 +76,18 @@ const ProtectedProjectsProjectIdTablesIndexRoute =
     path: '/tables/',
     getParentRoute: () => ProtectedProjectsProjectIdRouteRoute,
   } as any)
+const ProtectedProjectsProjectIdRelationshipsIndexRoute =
+  ProtectedProjectsProjectIdRelationshipsIndexRouteImport.update({
+    id: '/relationships/',
+    path: '/relationships/',
+    getParentRoute: () => ProtectedProjectsProjectIdRouteRoute,
+  } as any)
+const ProtectedProjectsProjectIdExportIndexRoute =
+  ProtectedProjectsProjectIdExportIndexRouteImport.update({
+    id: '/export/',
+    path: '/export/',
+    getParentRoute: () => ProtectedProjectsProjectIdRouteRoute,
+  } as any)
 const ProtectedProjectsProjectIdAiIndexRoute =
   ProtectedProjectsProjectIdAiIndexRouteImport.update({
     id: '/ai/',
@@ -90,6 +104,8 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupIndexRoute
   '/projects/$projectId/': typeof ProtectedProjectsProjectIdIndexRoute
   '/projects/$projectId/ai': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/projects/$projectId/export': typeof ProtectedProjectsProjectIdExportIndexRoute
+  '/projects/$projectId/relationships': typeof ProtectedProjectsProjectIdRelationshipsIndexRoute
   '/projects/$projectId/tables': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/projects/$projectId/workbench': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
@@ -101,6 +117,8 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupIndexRoute
   '/projects/$projectId': typeof ProtectedProjectsProjectIdIndexRoute
   '/projects/$projectId/ai': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/projects/$projectId/export': typeof ProtectedProjectsProjectIdExportIndexRoute
+  '/projects/$projectId/relationships': typeof ProtectedProjectsProjectIdRelationshipsIndexRoute
   '/projects/$projectId/tables': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/projects/$projectId/workbench': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
@@ -115,6 +133,8 @@ export interface FileRoutesById {
   '/auth/signup/': typeof AuthSignupIndexRoute
   '/_protected/projects/$projectId/': typeof ProtectedProjectsProjectIdIndexRoute
   '/_protected/projects/$projectId/ai/': typeof ProtectedProjectsProjectIdAiIndexRoute
+  '/_protected/projects/$projectId/export/': typeof ProtectedProjectsProjectIdExportIndexRoute
+  '/_protected/projects/$projectId/relationships/': typeof ProtectedProjectsProjectIdRelationshipsIndexRoute
   '/_protected/projects/$projectId/tables/': typeof ProtectedProjectsProjectIdTablesIndexRoute
   '/_protected/projects/$projectId/workbench/': typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
@@ -129,6 +149,8 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/projects/$projectId/'
     | '/projects/$projectId/ai'
+    | '/projects/$projectId/export'
+    | '/projects/$projectId/relationships'
     | '/projects/$projectId/tables'
     | '/projects/$projectId/workbench'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +162,8 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/projects/$projectId'
     | '/projects/$projectId/ai'
+    | '/projects/$projectId/export'
+    | '/projects/$projectId/relationships'
     | '/projects/$projectId/tables'
     | '/projects/$projectId/workbench'
   id:
@@ -153,6 +177,8 @@ export interface FileRouteTypes {
     | '/auth/signup/'
     | '/_protected/projects/$projectId/'
     | '/_protected/projects/$projectId/ai/'
+    | '/_protected/projects/$projectId/export/'
+    | '/_protected/projects/$projectId/relationships/'
     | '/_protected/projects/$projectId/tables/'
     | '/_protected/projects/$projectId/workbench/'
   fileRoutesById: FileRoutesById
@@ -237,6 +263,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProjectsProjectIdTablesIndexRouteImport
       parentRoute: typeof ProtectedProjectsProjectIdRouteRoute
     }
+    '/_protected/projects/$projectId/relationships/': {
+      id: '/_protected/projects/$projectId/relationships/'
+      path: '/relationships'
+      fullPath: '/projects/$projectId/relationships'
+      preLoaderRoute: typeof ProtectedProjectsProjectIdRelationshipsIndexRouteImport
+      parentRoute: typeof ProtectedProjectsProjectIdRouteRoute
+    }
+    '/_protected/projects/$projectId/export/': {
+      id: '/_protected/projects/$projectId/export/'
+      path: '/export'
+      fullPath: '/projects/$projectId/export'
+      preLoaderRoute: typeof ProtectedProjectsProjectIdExportIndexRouteImport
+      parentRoute: typeof ProtectedProjectsProjectIdRouteRoute
+    }
     '/_protected/projects/$projectId/ai/': {
       id: '/_protected/projects/$projectId/ai/'
       path: '/ai'
@@ -250,6 +290,8 @@ declare module '@tanstack/react-router' {
 interface ProtectedProjectsProjectIdRouteRouteChildren {
   ProtectedProjectsProjectIdIndexRoute: typeof ProtectedProjectsProjectIdIndexRoute
   ProtectedProjectsProjectIdAiIndexRoute: typeof ProtectedProjectsProjectIdAiIndexRoute
+  ProtectedProjectsProjectIdExportIndexRoute: typeof ProtectedProjectsProjectIdExportIndexRoute
+  ProtectedProjectsProjectIdRelationshipsIndexRoute: typeof ProtectedProjectsProjectIdRelationshipsIndexRoute
   ProtectedProjectsProjectIdTablesIndexRoute: typeof ProtectedProjectsProjectIdTablesIndexRoute
   ProtectedProjectsProjectIdWorkbenchIndexRoute: typeof ProtectedProjectsProjectIdWorkbenchIndexRoute
 }
@@ -259,6 +301,10 @@ const ProtectedProjectsProjectIdRouteRouteChildren: ProtectedProjectsProjectIdRo
     ProtectedProjectsProjectIdIndexRoute: ProtectedProjectsProjectIdIndexRoute,
     ProtectedProjectsProjectIdAiIndexRoute:
       ProtectedProjectsProjectIdAiIndexRoute,
+    ProtectedProjectsProjectIdExportIndexRoute:
+      ProtectedProjectsProjectIdExportIndexRoute,
+    ProtectedProjectsProjectIdRelationshipsIndexRoute:
+      ProtectedProjectsProjectIdRelationshipsIndexRoute,
     ProtectedProjectsProjectIdTablesIndexRoute:
       ProtectedProjectsProjectIdTablesIndexRoute,
     ProtectedProjectsProjectIdWorkbenchIndexRoute:

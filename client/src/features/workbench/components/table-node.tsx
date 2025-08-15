@@ -1,4 +1,7 @@
-import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
+import { TrashIcon } from "lucide-react";
+import type { Design, TableValues } from "shared";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -7,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Design, TableValues } from "shared";
 import {
   Table,
   TableBody,
@@ -16,9 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EditTableDialog } from "@/features/tables/components/edit-table-dialog";
 import { useDesign } from "@/hooks/use-design";
-import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
 
 export type TableNode = Node<{
   table: TableValues;
@@ -34,13 +35,14 @@ export function TableNode({ data: { table } }: NodeProps<TableNode>) {
     updateDesign(newDesign);
   };
   return (
-    <Card className="w-64 h-64">
+    <Card className="w-72 h-64">
       <CardHeader>
         <CardTitle>{table.name}</CardTitle>
         {table.description && (
           <CardDescription>{table.description}</CardDescription>
         )}
-        <CardAction>
+        <CardAction className="flex gap-2">
+          <EditTableDialog table={table} />
           <Button variant="destructive" size="icon" onClick={handleDelete}>
             <TrashIcon />
           </Button>

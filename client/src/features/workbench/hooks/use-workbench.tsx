@@ -1,3 +1,15 @@
+import { useFullscreen } from "@mantine/hooks";
+import {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  type OnConnect,
+  type OnEdgesChange,
+  type OnNodesChange,
+} from "@xyflow/react";
+import { useCallback, useEffect, useState } from "react";
+import type { Design, ForeignKey } from "shared";
+import { v7 as randomUUIDv7 } from "uuid";
 import { useTheme } from "@/components/theme/theme-provider";
 import { useDesign } from "@/hooks/use-design";
 import {
@@ -6,18 +18,6 @@ import {
   isDesignChanged,
   newDesignFromNodesAndEdges,
 } from "@/lib/utils";
-import { useFullscreen } from "@mantine/hooks";
-import {
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  OnConnect,
-  OnEdgesChange,
-  OnNodesChange,
-} from "@xyflow/react";
-import { useCallback, useEffect, useState } from "react";
-import type { Design, ForeignKey } from "shared";
-import { v7 as randomUUIDv7 } from "uuid";
 
 export function useWorkbench() {
   const { theme } = useTheme();
@@ -36,12 +36,12 @@ export function useWorkbench() {
   const onNodesChange: OnNodesChange = useCallback(
     (changes) =>
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    [],
+    []
   );
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) =>
       setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
+    []
   );
   const onConnect: OnConnect = useCallback(
     (params) => {
@@ -69,7 +69,7 @@ export function useWorkbench() {
       });
       setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot));
     },
-    [updateDesign, design.relationships],
+    [updateDesign, design.relationships]
   );
 
   const saveDesign = useCallback(() => {

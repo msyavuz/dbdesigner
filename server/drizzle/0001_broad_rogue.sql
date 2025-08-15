@@ -1,0 +1,2 @@
+CREATE TYPE "public"."dialect" AS ENUM('general', 'postgresql', 'mysql', 'sqlite', 'sqlserver', 'oracle');--> statement-breakpoint
+ALTER TABLE "projects" ADD COLUMN "dialect" "dialect" DEFAULT 'general' NOT NULL;

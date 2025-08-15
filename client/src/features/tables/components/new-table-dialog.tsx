@@ -1,5 +1,11 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoaderData } from "@tanstack/react-router";
+import { useState } from "react";
+import { type FieldErrors, useFieldArray, useForm } from "react-hook-form";
+import { type TableValues, tableSchema } from "shared";
+import { toast } from "sonner";
+import { v7 as randomUUIDv7 } from "uuid";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogClose,
@@ -10,10 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ColumnsDataTable } from "./columns-table";
-import { Design, tableSchema, TableValues } from "shared";
-import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
-import { v7 as randomUUIDv7 } from "uuid";
 import {
   Form,
   FormControl,
@@ -22,12 +24,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 import { useDesign } from "@/hooks/use-design";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ColumnsDataTable } from "./columns-table";
 
 export function NewTableDialog() {
+  const project = useLoaderData({ from: "/_protected/projects/$projectId" });
   const form = useForm<TableValues>({
     resolver: zodResolver(tableSchema),
     defaultValues: {
@@ -47,11 +49,9 @@ export function NewTableDialog() {
   const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: TableValues) => {
-    const newDesign: Design = {
-      ...design,
+    updateDesign({
       tables: [...design.tables, { ...data, position: { x: 0, y: 0 } }],
-    };
-    updateDesign(newDesign);
+    });
     setOpen(false);
   };
 
@@ -59,7 +59,7 @@ export function NewTableDialog() {
     toast.error(
       `Error creating table: ${Object.values(errors)
         .map((error) => error.message)
-        .join(", ")}`,
+        .join(", ")}`
     );
   };
 
@@ -131,6 +131,7 @@ export function NewTableDialog() {
                       remove={remove}
                       fields={fields}
                       control={form.control}
+                      dialect={project?.dialect}
                     />
                   </FormControl>
                   <FormMessage />

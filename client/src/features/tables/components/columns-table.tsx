@@ -3,6 +3,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useMemo } from "react";
+import type {
+  Control,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+} from "react-hook-form";
+import type { Column, Dialect, TableValues } from "shared";
+import { v7 as randomUUIDv7 } from "uuid";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,22 +20,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { v7 as randomUUIDv7 } from "uuid";
 import { getColumns } from "./columns-utils";
-import { Column, TableValues } from "shared";
-import {
-  Control,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-} from "react-hook-form";
-import { useMemo } from "react";
 
 interface ColumnsDataTableProps {
   fields: Column[];
   append: UseFieldArrayAppend<TableValues>;
   remove: UseFieldArrayRemove;
   control: Control<TableValues>;
+  dialect?: Dialect;
 }
 
 export function ColumnsDataTable({
@@ -34,10 +35,11 @@ export function ColumnsDataTable({
   append,
   remove,
   control,
+  dialect,
 }: ColumnsDataTableProps) {
   const columns = useMemo(
-    () => getColumns({ control, remove }),
-    [control, remove],
+    () => getColumns({ control, remove, dialect }),
+    [control, remove, dialect]
   );
 
   const table = useReactTable({
@@ -69,7 +71,7 @@ export function ColumnsDataTable({
                       <div className="flex items-center justify-center">
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                       </div>
                     )}
@@ -91,7 +93,7 @@ export function ColumnsDataTable({
                     <div className="flex items-center">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </div>
                   </TableCell>
@@ -113,7 +115,7 @@ export function ColumnsDataTable({
               <Button
                 type="button"
                 onClick={() => {
-                  append({ ...defaultColumn });
+                  append(defaultColumn);
                 }}
               >
                 Add column

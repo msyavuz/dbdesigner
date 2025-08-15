@@ -1,11 +1,14 @@
-import { ProjectDialogMode, ProjectDialog } from "@/features/projects/components/project-dialog";
-import { ProjectCard } from "@/features/projects/components/project-card";
-import { UserProfile } from "@/features/auth/components/user-profile";
-import { fetchProjects } from "@/lib/client";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { UserProfile } from "@/features/auth/components/user-profile";
+import { ProjectCard } from "@/features/projects/components/project-card";
+import {
+  ProjectDialog,
+  ProjectDialogMode,
+} from "@/features/projects/components/project-dialog";
+import { fetchProjects } from "@/lib/client";
 
 export const Route = createFileRoute("/_protected/projects/")({
   component: RouteComponent,

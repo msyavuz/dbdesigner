@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import "@xyflow/react/dist/style.css";
-import { nodeTypes } from "@/lib/utils";
+import { ReactFlow } from "@xyflow/react";
 import { WorkbenchControls } from "@/features/workbench/components/workbench-controls";
 import { useWorkbench } from "@/features/workbench/hooks/use-workbench";
-import { ReactFlow } from "@xyflow/react";
+import { edgeTypes, nodeTypes } from "@/lib/utils";
 
 export const Route = createFileRoute(
-  "/_protected/projects/$projectId/workbench/",
+  "/_protected/projects/$projectId/workbench/"
 )({
   component: RouteComponent,
 });
@@ -32,6 +32,7 @@ function RouteComponent() {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}

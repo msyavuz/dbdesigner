@@ -1,8 +1,8 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import NotFound from "@/components/common/404-not-found";
+import { Toaster } from "@/components/ui/sonner";
 import { routeTree } from "@/routeTree.gen";
 import { AppProviders } from "./providers";
-import { Toaster } from "@/components/ui/sonner";
-import NotFound from "@/components/common/404-not-found";
 
 const router = createRouter({
   routeTree,

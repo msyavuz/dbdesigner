@@ -1,10 +1,10 @@
-import { renderHook, act } from "@testing-library/react";
+import { useFullscreen } from "@mantine/hooks";
+import { act, renderHook } from "@testing-library/react";
+import type { Design, ForeignKey, Table } from "shared";
 import { vi } from "vitest";
-import type { Design, Table, ForeignKey } from "shared";
-import { useWorkbench } from "./use-workbench";
 import { useTheme } from "@/components/theme/theme-provider";
 import { useDesign } from "@/hooks/use-design";
-import { useFullscreen } from "@mantine/hooks";
+import { useWorkbench } from "./use-workbench";
 
 // Mock only the essential dependencies
 vi.mock("@/components/theme/theme-provider");
@@ -13,7 +13,6 @@ vi.mock("@mantine/hooks");
 
 const mockDesign: Design = {
   id: "design1",
-  name: "Test Design",
   tables: [
     {
       id: "table1",
@@ -145,8 +144,7 @@ describe("useWorkbench", () => {
             onDelete: "set null",
           }),
         ]),
-      }),
+      })
     );
   });
 });
-

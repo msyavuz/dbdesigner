@@ -1,3 +1,4 @@
+import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
 
 export interface DeleteConfirmationDialogProps {
   open: boolean;
@@ -31,6 +31,7 @@ export function DeleteConfirmationDialog({
   itemName,
 }: DeleteConfirmationDialogProps) {
   const [confirmText, setConfirmText] = useState("");
+  const confirmInputId = useId();
   const isConfirmValid = confirmText === "Delete";
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export function DeleteConfirmationDialog({
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="confirm-text" className="text-sm font-medium">
+            <Label htmlFor={confirmInputId} className="text-sm font-medium">
               Type{" "}
               <span className="font-mono bg-muted px-1 py-0.5 rounded text-red-600 dark:text-red-400">
                 Delete
@@ -76,7 +77,7 @@ export function DeleteConfirmationDialog({
               to confirm
             </Label>
             <Input
-              id="confirm-text"
+              id={confirmInputId}
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
               onKeyDown={handleKeyDown}

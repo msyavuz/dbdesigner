@@ -4,5 +4,4 @@ import { Hono } from "hono";
 
 export const docsRouter = new Hono()
   .get("/doc", (c) => c.json(openApiDoc))
-  //@ts-ignore
   .get("/swagger", swaggerUI({ url: "/api/doc" }));

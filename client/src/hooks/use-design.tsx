@@ -1,47 +1,42 @@
-import { updateProject } from "@/lib/client";
 import { useLoaderData } from "@tanstack/react-router";
-import { type Design } from "shared";
 import {
   createContext,
-  PropsWithChildren,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { defaultDesign } from "@/lib/defaults";
+import { createDefaultDesign, type Design } from "shared";
+import { updateProject } from "@/lib/client";
 
 const DesignContext = createContext<{
   design: Design;
   updateDesign: (newDesign: Partial<Design>) => void;
-}>({ design: defaultDesign, updateDesign: () => {} });
+}>({ design: createDefaultDesign(), updateDesign: () => {} });
 
 export const DesignProvider = ({ children }: PropsWithChildren) => {
   const data = useLoaderData({ from: "/_protected/projects/$projectId" });
-  const [design, setDesign] = useState<Design>(defaultDesign);
+  const [design, setDesign] = useState<Design>(createDefaultDesign());
 
   useEffect(() => {
     if (data.design) {
-      try {
-        const parsed = JSON.parse(data.design);
-        const safeDesign = {
-          ...defaultDesign,
-          ...parsed,
-          tables: parsed.tables || [],
-          relationships: parsed.relationships || [],
-        };
-        setDesign(safeDesign);
-      } catch (err) {
-        console.error("Invalid design JSON:", err);
-        setDesign(defaultDesign);
-      }
+      const defaultDesign = createDefaultDesign();
+      const safeDesign = { ...defaultDesign, ...data.design };
+      setDesign(safeDesign);
     }
   }, [data.design]);
 
   const updateDesign = async (newDesign: Partial<Design>) => {
-    await updateProject(data.id, {
-      design: JSON.stringify(newDesign),
-    });
-    setDesign((prev) => ({ ...prev, ...newDesign }));
+    const updatedDesign = { ...design, ...newDesign };
+    try {
+      await updateProject(data.id, {
+        design: updatedDesign,
+      });
+      setDesign(updatedDesign);
+    } catch (error) {
+      console.error("Failed to update design:", error);
+      throw error;
+    }
   };
 
   return (

@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { sendAIMessage, fetchAIConversation } from "@/lib/client";
-import { Send, Bot, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Bot, Send, User } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { fetchAIConversation, sendAIMessage } from "@/lib/client";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_protected/projects/$projectId/ai/")({
   component: RouteComponent,
@@ -28,9 +28,9 @@ function RouteComponent() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -42,7 +42,7 @@ function RouteComponent() {
               id: `history-${index}`,
               role: msg.role,
               content: msg.content,
-            }),
+            })
           );
           setMessages(formattedMessages);
         }
@@ -56,7 +56,7 @@ function RouteComponent() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, scrollToBottom]);
+  }, [scrollToBottom]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,14 +91,14 @@ function RouteComponent() {
           prev.map((msg) =>
             msg.id === assistantMessageId
               ? { ...msg, content: assistantContent }
-              : msg,
-          ),
+              : msg
+          )
         );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setMessages((prev) =>
-        prev.filter((msg) => msg.id !== assistantMessageId),
+        prev.filter((msg) => msg.id !== assistantMessageId)
       );
     } finally {
       setIsLoading(false);
@@ -138,7 +138,7 @@ function RouteComponent() {
                 key={message.id}
                 className={cn(
                   "flex gap-3",
-                  message.role === "user" ? "justify-end" : "justify-start",
+                  message.role === "user" ? "justify-end" : "justify-start"
                 )}
               >
                 {message.role === "assistant" && (
@@ -154,7 +154,7 @@ function RouteComponent() {
                     "max-w-[70%] rounded-lg p-3",
                     message.role === "user"
                       ? "bg-primary text-primary-foreground ml-auto"
-                      : "bg-muted",
+                      : "bg-muted"
                   )}
                 >
                   {message.role === "assistant" &&

@@ -1,3 +1,4 @@
+import { Link, type LinkProps } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link, LinkProps } from "@tanstack/react-router";
 import { UserProfile } from "@/features/auth/components/user-profile";
 
 export type SidebarItem = {

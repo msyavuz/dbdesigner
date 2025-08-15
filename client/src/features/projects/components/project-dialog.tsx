@@ -1,3 +1,8 @@
+import { DialogClose } from "@radix-ui/react-dialog";
+import { useRouter } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { type Dialect, dialectOptions } from "shared";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,11 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { newProjectSchema } from "shared";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -20,10 +20,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createProject, updateProject } from "@/lib/client";
-import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "@tanstack/react-router";
+import { createProject, updateProject } from "@/lib/client";
 
 export enum ProjectDialogMode {
   Create = "create",
@@ -34,6 +39,7 @@ type Project = {
   id: string;
   name: string;
   description?: string;
+  dialect?: Dialect;
 };
 
 type CommonProjectDialogProps = {
@@ -51,19 +57,25 @@ type CreateProjectDialogProps = CommonProjectDialogProps & {
 
 type ProjectDialogProps = CreateProjectDialogProps | EditProjectDialogProps;
 
+type FormData = {
+  name: string;
+  description?: string;
+  dialect: Dialect;
+};
+
 export function ProjectDialog(props: ProjectDialogProps) {
   const mode = props.mode;
-  const form = useForm<z.infer<typeof newProjectSchema>>({
-    resolver: zodResolver(newProjectSchema),
+  const form = useForm<FormData>({
     defaultValues: {
       name: mode === "edit" ? props.project.name : "",
       description: mode === "edit" ? props.project.description : "",
+      dialect: mode === "edit" ? props.project.dialect || "general" : "general",
     },
   });
 
   const router = useRouter();
 
-  async function onSubmit(data: z.infer<typeof newProjectSchema>) {
+  async function onSubmit(data: FormData) {
     switch (mode) {
       case ProjectDialogMode.Create:
         await createProject(data);
@@ -83,7 +95,7 @@ export function ProjectDialog(props: ProjectDialogProps) {
           <DialogTitle>
             {mode === ProjectDialogMode.Create
               ? "Create New Project"
-              : "Edit Project" + props.project.name}
+              : `Edit Project${props.project.name}`}
           </DialogTitle>
           <DialogDescription>
             {mode === ProjectDialogMode.Create
@@ -114,6 +126,30 @@ export function ProjectDialog(props: ProjectDialogProps) {
                   <FormLabel>Project description</FormLabel>
                   <FormControl>
                     <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dialect"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Database dialect</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a dialect" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {dialectOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

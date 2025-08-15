@@ -18,7 +18,7 @@ const mockProps: Required<DeleteConfirmationDialogProps> = {
 
 test("should render correctly ", () => {
   const { getByText, getByRole } = render(
-    <DeleteConfirmationDialog {...mockProps} />,
+    <DeleteConfirmationDialog {...mockProps} />
   );
 
   expect(getByText(mockProps.title)).toBeInTheDocument();

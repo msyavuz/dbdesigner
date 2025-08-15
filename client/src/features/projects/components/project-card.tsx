@@ -1,6 +1,3 @@
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@tanstack/react-router";
 import {
   ArrowRightIcon,
@@ -8,19 +5,27 @@ import {
   EllipsisVerticalIcon,
   Trash2Icon,
 } from "lucide-react";
+import { useState } from "react";
+import { DeleteConfirmationDialog } from "@/components/common/delete-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteProject } from "@/lib/client";
-import { DeleteConfirmationDialog } from "@/components/common/delete-dialog";
-import { useState } from "react";
 import {
-  ProjectDialogMode,
   ProjectDialog,
+  ProjectDialogMode,
 } from "@/features/projects/components/project-dialog";
+import { deleteProject } from "@/lib/client";
+import { cn } from "@/lib/utils";
 
 interface ProjectCardProps extends React.ComponentProps<"div"> {
   project: {

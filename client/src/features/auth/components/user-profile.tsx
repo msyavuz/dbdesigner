@@ -1,3 +1,15 @@
+import { useNavigate } from "@tanstack/react-router";
+import {
+  Bell,
+  ChevronDown,
+  CreditCard,
+  LogOut,
+  Settings,
+  Shield,
+  User,
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,18 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { signOut, useSession } from "@/lib/auth-client";
-import { useNavigate } from "@tanstack/react-router";
-import {
-  User,
-  Settings,
-  LogOut,
-  CreditCard,
-  Bell,
-  Shield,
-  ChevronDown,
-} from "lucide-react";
-import type { ReactNode } from "react";
-import { ModeToggle } from "@/components/theme/mode-toggle";
 
 interface UserProfileProps {
   extraMenuItems?: ReactNode;

@@ -1,6 +1,15 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import { TrashIcon } from "lucide-react";
+import type { Control, UseFieldArrayRemove } from "react-hook-form";
+import {
+  type Column,
+  type Dialect,
+  getTypesForDialect,
+  type TableValues,
+} from "shared";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FormField, FormControl, FormItem } from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,20 +18,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ColumnDef } from "@tanstack/react-table";
-import { TrashIcon } from "lucide-react";
-import { Control, UseFieldArrayRemove } from "react-hook-form";
-import { Column, sqlTypes, TableValues } from "shared";
 
 interface GetColumnsProps {
   control: Control<TableValues>;
   remove: UseFieldArrayRemove;
+  dialect?: Dialect;
 }
 
 export const getColumns = ({
   control,
   remove,
+  dialect = "general",
 }: GetColumnsProps): Array<ColumnDef<Column, unknown>> => {
+  const availableTypes = getTypesForDialect(dialect);
   return [
     {
       accessorKey: "name",
@@ -67,7 +75,7 @@ export const getColumns = ({
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {sqlTypes.map((type) => (
+                      {availableTypes.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type.charAt(0).toUpperCase() + type.slice(1)}
                         </SelectItem>

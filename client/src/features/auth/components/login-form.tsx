@@ -1,4 +1,10 @@
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { loginSchema } from "shared";
+import { toast } from "sonner";
+import type z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,13 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { loginSchema } from "shared";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -21,18 +20,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
-import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   redirect?: string;
 }
 
-export function LoginForm({
-  className,
-  redirect,
-  ...props
-}: LoginFormProps) {
+export function LoginForm({ className, redirect, ...props }: LoginFormProps) {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

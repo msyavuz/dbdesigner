@@ -1,4 +1,10 @@
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { signupSchema } from "shared";
+import { toast } from "sonner";
+import type z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,11 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "@tanstack/react-router";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -19,10 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { signupSchema } from "shared";
+import { cn } from "@/lib/utils";
 
 interface SignupFormProps extends React.ComponentProps<"div"> {
   redirect?: string;

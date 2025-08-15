@@ -1,10 +1,7 @@
 export type Design = {
   id: string;
-  name: string;
-  description?: string;
   tables: Table[];
   relationships: ForeignKey[];
-  exampleData?: Record<string, any[]>;
 };
 
 export type Table = {

@@ -1,3 +1,7 @@
+import { useNavigate } from "@tanstack/react-router";
+import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import { toast } from "sonner";
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,12 +18,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOut, useSession } from "@/lib/auth-client";
-import { useNavigate } from "@tanstack/react-router";
-import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ModeToggle } from "@/components/theme/mode-toggle";
+import { signOut, useSession } from "@/lib/auth-client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();

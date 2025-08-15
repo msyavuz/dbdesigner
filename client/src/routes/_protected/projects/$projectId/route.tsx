@@ -1,8 +1,3 @@
-import { AppSidebar, type SidebarItem } from "@/components/common/app-sidebar";
-import { Button } from "@/components/ui/button";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { DesignProvider } from "@/hooks/use-design";
-import { fetchProject } from "@/lib/client";
 import {
   createFileRoute,
   Link,
@@ -11,10 +6,17 @@ import {
 } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
+  DownloadIcon,
+  LinkIcon,
   PencilRulerIcon,
   SparklesIcon,
   TableIcon,
 } from "lucide-react";
+import { AppSidebar, type SidebarItem } from "@/components/common/app-sidebar";
+import { Button } from "@/components/ui/button";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DesignProvider } from "@/hooks/use-design";
+import { fetchProject } from "@/lib/client";
 
 export const Route = createFileRoute("/_protected/projects/$projectId")({
   component: RouteComponent,
@@ -39,9 +41,19 @@ const items: SidebarItem[] = [
     url: "/projects/$projectId/tables",
   },
   {
+    title: "Relationships",
+    icon: LinkIcon,
+    url: "/projects/$projectId/relationships",
+  },
+  {
     title: "Ai",
     icon: SparklesIcon,
     url: "/projects/$projectId/ai",
+  },
+  {
+    title: "Export",
+    icon: DownloadIcon,
+    url: "/projects/$projectId/export",
   },
 ];
 
