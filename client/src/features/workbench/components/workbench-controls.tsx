@@ -1,22 +1,17 @@
-import {
-  CheckIcon,
-  FullscreenIcon,
-  ClockIcon,
-  RefreshCwIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useHotkeys, useIdle } from "@mantine/hooks";
-import { NewTableDialog } from "@/features/tables/components/new-table-dialog";
-import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { useHotkeys, useIdle } from '@mantine/hooks'
+import { CheckIcon, ClockIcon, FullscreenIcon, RefreshCwIcon } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { NewTableDialog } from '@/features/tables/components/new-table-dialog'
 
-type SaveStatus = "saved" | "pending" | "unsaved";
+type SaveStatus = 'saved' | 'pending' | 'unsaved'
 
 interface WorkbenchControlsProps {
-  isClean: boolean;
-  toggleFullscreen: () => Promise<void>;
-  saveDesign: () => void;
+  isClean: boolean
+  toggleFullscreen: () => Promise<void>
+  saveDesign: () => void
 }
 
 export function WorkbenchControls({
@@ -24,52 +19,52 @@ export function WorkbenchControls({
   toggleFullscreen,
   saveDesign,
 }: WorkbenchControlsProps) {
-  const idle = useIdle(1000);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
+  const idle = useIdle(1000)
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved')
 
-  const handleSave = async () => {
-    setSaveStatus("pending");
+  const handleSave = useCallback(async () => {
+    setSaveStatus('pending')
     try {
-      saveDesign();
-    } catch (error) {
-      toast.error("Failed to save design. Please try again.");
+      saveDesign()
+    } catch (_error) {
+      toast.error('Failed to save design. Please try again.')
     }
-  };
+  }, [saveDesign])
 
   useHotkeys([
     [
-      "mod + s",
+      'mod + s',
       () => {
-        handleSave();
+        handleSave()
       },
     ],
-  ]);
+  ])
 
   useEffect(() => {
     if (idle && !isClean) {
-      handleSave();
+      handleSave()
     }
-  }, [idle, isClean]);
+  }, [idle, isClean, handleSave])
 
   useEffect(() => {
     if (isClean) {
-      setSaveStatus("saved");
+      setSaveStatus('saved')
     } else {
-      setSaveStatus("unsaved");
+      setSaveStatus('unsaved')
     }
-  }, [isClean]);
+  }, [isClean])
   return (
     <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2">
       <NewTableDialog />
       <Button size="sm" variant="outline" onClick={toggleFullscreen}>
         <FullscreenIcon />
       </Button>
-      {saveStatus === "saved" ? (
+      {saveStatus === 'saved' ? (
         <Badge variant="outline" className="py-1.5">
           Saved
           <CheckIcon />
         </Badge>
-      ) : saveStatus === "pending" ? (
+      ) : saveStatus === 'pending' ? (
         <Badge variant="secondary" className="py-1.5">
           Saving
           <RefreshCwIcon className="animate-spin" />
@@ -81,5 +76,5 @@ export function WorkbenchControls({
         </Badge>
       )}
     </div>
-  );
+  )
 }

@@ -1,16 +1,11 @@
-import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "@tanstack/react-router";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
+import { signupSchema } from 'shared'
+import { toast } from 'sonner'
+import type z from 'zod'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -18,43 +13,42 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { signUp } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { signupSchema } from "shared";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { signUp } from '@/lib/auth-client'
+import { cn } from '@/lib/utils'
 
-interface SignupFormProps extends React.ComponentProps<"div"> {
-  redirect?: string;
+interface SignupFormProps extends React.ComponentProps<'div'> {
+  redirect?: string
 }
 
 export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      password: "",
+      username: '',
+      email: '',
+      password: '',
     },
-  });
+  })
 
-  const navigate = useNavigate({ from: "/auth/signup" });
+  const navigate = useNavigate({ from: '/auth/signup' })
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
     const { error } = await signUp.email({
       email: values.email,
       password: values.password,
       name: values.username,
-    });
+    })
     if (error) {
-      toast.error("Signup failed. Please try again.");
-      return;
+      toast.error('Signup failed. Please try again.')
+      return
     }
-    navigate({ to: redirect || "/auth/login" });
+    navigate({ to: redirect || '/auth/login' })
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle>Signup to create a new account</CardTitle>
@@ -75,12 +69,7 @@ export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        name="username"
-                        type="text"
-                        autoComplete="username"
-                      />
+                      <Input {...field} name="username" type="text" autoComplete="username" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -94,12 +83,7 @@ export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                      />
+                      <Input {...field} name="email" type="email" autoComplete="email" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,7 +113,7 @@ export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
                 Signup
               </Button>
               <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link to="/auth/login" className="underline underline-offset-4">
                   Login
                 </Link>
@@ -139,5 +123,5 @@ export function SignupForm({ className, redirect, ...props }: SignupFormProps) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

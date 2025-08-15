@@ -1,49 +1,39 @@
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link, useRouter } from "@tanstack/react-router";
-import {
-  ArrowRightIcon,
-  EditIcon,
-  EllipsisVerticalIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { Link, useRouter } from '@tanstack/react-router'
+import { ArrowRightIcon, EditIcon, EllipsisVerticalIcon, Trash2Icon } from 'lucide-react'
+import { useState } from 'react'
+import { DeleteConfirmationDialog } from '@/components/common/delete-dialog'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { deleteProject } from "@/lib/client";
-import { DeleteConfirmationDialog } from "@/components/common/delete-dialog";
-import { useState } from "react";
-import {
-  ProjectDialogMode,
-  ProjectDialog,
-} from "@/features/projects/components/project-dialog";
+} from '@/components/ui/dropdown-menu'
+import { ProjectDialog, ProjectDialogMode } from '@/features/projects/components/project-dialog'
+import { deleteProject } from '@/lib/client'
+import { cn } from '@/lib/utils'
 
-interface ProjectCardProps extends React.ComponentProps<"div"> {
+interface ProjectCardProps extends React.ComponentProps<'div'> {
   project: {
-    id: string;
-    name: string;
-    description?: string;
-  };
+    id: string
+    name: string
+    description?: string
+  }
 }
 
 export function ProjectCard({ project, className }: ProjectCardProps) {
-  const router = useRouter();
+  const router = useRouter()
   const onDelete = () => {
-    deleteProject(project.id);
-    router.invalidate();
-  };
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+    deleteProject(project.id)
+    router.invalidate()
+  }
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [openEditDialog, setOpenEditDialog] = useState(false)
   return (
     <Card className={cn(className)}>
       <CardHeader className="flex justify-between items-center">
-        <h4 className="text-lg font-semibold leading-none tracking-tight">
-          {project.name}
-        </h4>
+        <h4 className="text-lg font-semibold leading-none tracking-tight">{project.name}</h4>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="outline" className="p-0">
@@ -53,9 +43,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           <DropdownMenuContent align="start">
             <DropdownMenuItem
               onClick={(e: React.MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setOpenEditDialog(true);
+                e.preventDefault()
+                e.stopPropagation()
+                setOpenEditDialog(true)
               }}
             >
               <EditIcon />
@@ -64,9 +54,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             <DropdownMenuItem
               variant="destructive"
               onClick={(e: React.MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setOpenDeleteDialog(true);
+                e.preventDefault()
+                e.stopPropagation()
+                setOpenDeleteDialog(true)
               }}
             >
               <Trash2Icon />
@@ -101,5 +91,5 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         onConfirm={onDelete}
       />
     </Card>
-  );
+  )
 }

@@ -1,35 +1,35 @@
-import { renderHook, act } from "@testing-library/react";
-import { vi } from "vitest";
-import type { Design, Table, ForeignKey } from "shared";
-import { useWorkbench } from "./use-workbench";
-import { useTheme } from "@/components/theme/theme-provider";
-import { useDesign } from "@/hooks/use-design";
-import { useFullscreen } from "@mantine/hooks";
+import { useFullscreen } from '@mantine/hooks'
+import { act, renderHook } from '@testing-library/react'
+import type { Design, ForeignKey, Table } from 'shared'
+import { vi } from 'vitest'
+import { useTheme } from '@/components/theme/theme-provider'
+import { useDesign } from '@/hooks/use-design'
+import { useWorkbench } from './use-workbench'
 
 // Mock only the essential dependencies
-vi.mock("@/components/theme/theme-provider");
-vi.mock("@/hooks/use-design");
-vi.mock("@mantine/hooks");
+vi.mock('@/components/theme/theme-provider')
+vi.mock('@/hooks/use-design')
+vi.mock('@mantine/hooks')
 
 const mockDesign: Design = {
-  id: "design1",
+  id: 'design1',
   tables: [
     {
-      id: "table1",
-      name: "Users",
+      id: 'table1',
+      name: 'Users',
       position: { x: 100, y: 200 },
       columns: [
         {
-          id: "col1",
-          name: "id",
-          type: "integer",
+          id: 'col1',
+          name: 'id',
+          type: 'integer',
           isNullable: false,
           isPrimaryKey: true,
         },
         {
-          id: "col2",
-          name: "name",
-          type: "text",
+          id: 'col2',
+          name: 'name',
+          type: 'text',
           isNullable: false,
           isPrimaryKey: false,
         },
@@ -37,114 +37,114 @@ const mockDesign: Design = {
     },
   ] as Table[],
   relationships: [] as ForeignKey[],
-};
+}
 
-describe("useWorkbench", () => {
-  const mockUpdateDesign = vi.fn();
-  const mockToggleFullscreen = vi.fn();
+describe('useWorkbench', () => {
+  const mockUpdateDesign = vi.fn()
+  const mockToggleFullscreen = vi.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
 
-    vi.mocked(useTheme).mockReturnValue({ theme: "light", setTheme: vi.fn() });
+    vi.mocked(useTheme).mockReturnValue({ theme: 'light', setTheme: vi.fn() })
     vi.mocked(useDesign).mockReturnValue({
       design: mockDesign,
       updateDesign: mockUpdateDesign,
-    });
+    })
     vi.mocked(useFullscreen).mockReturnValue({
       toggle: mockToggleFullscreen,
       ref: vi.fn(),
       fullscreen: false,
-    });
-  });
+    })
+  })
 
-  test("should initialize with correct default values", () => {
-    const { result } = renderHook(() => useWorkbench());
+  test('should initialize with correct default values', () => {
+    const { result } = renderHook(() => useWorkbench())
 
-    expect(result.current.theme).toBe("light");
-    expect(result.current.nodes).toHaveLength(1);
-    expect(result.current.edges).toHaveLength(0);
-    expect(typeof result.current.onNodesChange).toBe("function");
-    expect(typeof result.current.onEdgesChange).toBe("function");
-    expect(typeof result.current.onConnect).toBe("function");
-    expect(typeof result.current.saveDesign).toBe("function");
-    expect(typeof result.current.toggleFullscreen).toBe("function");
-  });
+    expect(result.current.theme).toBe('light')
+    expect(result.current.nodes).toHaveLength(1)
+    expect(result.current.edges).toHaveLength(0)
+    expect(typeof result.current.onNodesChange).toBe('function')
+    expect(typeof result.current.onEdgesChange).toBe('function')
+    expect(typeof result.current.onConnect).toBe('function')
+    expect(typeof result.current.saveDesign).toBe('function')
+    expect(typeof result.current.toggleFullscreen).toBe('function')
+  })
 
-  test("should call updateDesign when saveDesign is called", () => {
-    const { result } = renderHook(() => useWorkbench());
-
-    act(() => {
-      result.current.saveDesign();
-    });
-
-    expect(mockUpdateDesign).toHaveBeenCalled();
-  });
-
-  test("should call toggle when toggleFullscreen is called", () => {
-    const { result } = renderHook(() => useWorkbench());
+  test('should call updateDesign when saveDesign is called', () => {
+    const { result } = renderHook(() => useWorkbench())
 
     act(() => {
-      result.current.toggleFullscreen();
-    });
+      result.current.saveDesign()
+    })
 
-    expect(mockToggleFullscreen).toHaveBeenCalled();
-  });
+    expect(mockUpdateDesign).toHaveBeenCalled()
+  })
 
-  test("should not create connection when handles are invalid", () => {
-    const { result } = renderHook(() => useWorkbench());
+  test('should call toggle when toggleFullscreen is called', () => {
+    const { result } = renderHook(() => useWorkbench())
 
     act(() => {
-      result.current.onConnect({
-        source: "table1",
-        target: "table2",
-        sourceHandle: "invalid",
-        targetHandle: "target.table2.col3",
-      });
-    });
+      result.current.toggleFullscreen()
+    })
 
-    expect(mockUpdateDesign).not.toHaveBeenCalled();
-  });
+    expect(mockToggleFullscreen).toHaveBeenCalled()
+  })
 
-  test("should not create connection when source or target is missing", () => {
-    const { result } = renderHook(() => useWorkbench());
+  test('should not create connection when handles are invalid', () => {
+    const { result } = renderHook(() => useWorkbench())
 
     act(() => {
       result.current.onConnect({
-        source: "",
-        target: "table2",
-        sourceHandle: "source.table1.col1",
-        targetHandle: "target.table2.col3",
-      });
-    });
+        source: 'table1',
+        target: 'table2',
+        sourceHandle: 'invalid',
+        targetHandle: 'target.table2.col3',
+      })
+    })
 
-    expect(mockUpdateDesign).not.toHaveBeenCalled();
-  });
+    expect(mockUpdateDesign).not.toHaveBeenCalled()
+  })
 
-  test("should create connection with valid parameters", () => {
-    const { result } = renderHook(() => useWorkbench());
+  test('should not create connection when source or target is missing', () => {
+    const { result } = renderHook(() => useWorkbench())
 
     act(() => {
       result.current.onConnect({
-        source: "table1",
-        target: "table2",
-        sourceHandle: "source.table1.col1",
-        targetHandle: "target.table2.col3",
-      });
-    });
+        source: '',
+        target: 'table2',
+        sourceHandle: 'source.table1.col1',
+        targetHandle: 'target.table2.col3',
+      })
+    })
+
+    expect(mockUpdateDesign).not.toHaveBeenCalled()
+  })
+
+  test('should create connection with valid parameters', () => {
+    const { result } = renderHook(() => useWorkbench())
+
+    act(() => {
+      result.current.onConnect({
+        source: 'table1',
+        target: 'table2',
+        sourceHandle: 'source.table1.col1',
+        targetHandle: 'target.table2.col3',
+      })
+    })
 
     expect(mockUpdateDesign).toHaveBeenCalledWith(
       expect.objectContaining({
         relationships: expect.arrayContaining([
           expect.objectContaining({
-            fromTable: "table1",
-            fromColumn: "col1",
-            toTable: "table2",
-            toColumn: "col3",
-            onDelete: "set null",
+            fromTable: 'table1',
+            fromColumn: 'col1',
+            toTable: 'table2',
+            toColumn: 'col3',
+            onDelete: 'set null',
           }),
         ]),
-      }),
-    );
-  });
-});
+      })
+    )
+  })
+})

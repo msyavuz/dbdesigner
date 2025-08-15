@@ -1,4 +1,7 @@
-import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import { Handle, type Node, type NodeProps, Position } from '@xyflow/react'
+import { TrashIcon } from 'lucide-react'
+import type { Design, TableValues } from 'shared'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardAction,
@@ -6,8 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Design, TableValues } from "shared";
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -15,32 +17,28 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useDesign } from "@/hooks/use-design";
-import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
-import { EditTableDialog } from "@/features/tables/components/edit-table-dialog";
+} from '@/components/ui/table'
+import { EditTableDialog } from '@/features/tables/components/edit-table-dialog'
+import { useDesign } from '@/hooks/use-design'
 
 export type TableNode = Node<{
-  table: TableValues;
-}>;
+  table: TableValues
+}>
 
 export function TableNode({ data: { table } }: NodeProps<TableNode>) {
-  const { updateDesign, design } = useDesign();
+  const { updateDesign, design } = useDesign()
   const handleDelete = () => {
     const newDesign: Partial<Design> = {
       ...design,
       tables: design.tables.filter((t) => t.id !== table.id),
-    };
-    updateDesign(newDesign);
-  };
+    }
+    updateDesign(newDesign)
+  }
   return (
     <Card className="w-72 h-64">
       <CardHeader>
         <CardTitle>{table.name}</CardTitle>
-        {table.description && (
-          <CardDescription>{table.description}</CardDescription>
-        )}
+        {table.description && <CardDescription>{table.description}</CardDescription>}
         <CardAction className="flex gap-2">
           <EditTableDialog table={table} />
           <Button variant="destructive" size="icon" onClick={handleDelete}>
@@ -83,5 +81,5 @@ export function TableNode({ data: { table } }: NodeProps<TableNode>) {
         </Table>
       </CardContent>
     </Card>
-  );
+  )
 }

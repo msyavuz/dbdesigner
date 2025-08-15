@@ -1,10 +1,10 @@
-import { Database } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { Database } from 'lucide-react'
+import { Button } from '../components/ui/button'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: App,
-});
+})
 
 function App() {
   return (
@@ -19,7 +19,10 @@ function App() {
       </a>
       <h1 className="text-5xl font-black text-gray-900">DB Designer</h1>
       <h2 className="text-2xl font-bold text-gray-700">Visual Database Design Tool</h2>
-      <p className="text-gray-600 text-center max-w-md">Design and visualize database schemas with an intuitive drag-and-drop interface. Create tables, define relationships, and export your designs.</p>
+      <p className="text-gray-600 text-center max-w-md">
+        Design and visualize database schemas with an intuitive drag-and-drop interface. Create
+        tables, define relationships, and export your designs.
+      </p>
       <div className="flex items-center gap-4">
         <Button variant="secondary" asChild>
           <a target="_blank" rel="noopener noreferrer" href="https://github.com/msyavuz/dbdesigner">
@@ -35,7 +38,7 @@ function App() {
         Projects
       </Link>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

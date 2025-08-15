@@ -1,63 +1,63 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { useDesign } from "@/hooks/use-design";
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { useState } from "react";
-import { dialectOptions, generateSQL, type Dialect } from "shared";
-import { DownloadIcon, CopyIcon } from "lucide-react";
-import { toast } from "sonner";
+import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { CopyIcon, DownloadIcon } from 'lucide-react'
+import { useState } from 'react'
+import { type Dialect, dialectOptions, generateSQL } from 'shared'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
+import { useDesign } from '@/hooks/use-design'
 
-export const Route = createFileRoute("/_protected/projects/$projectId/export/")({
+export const Route = createFileRoute('/_protected/projects/$projectId/export/')({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const { design } = useDesign();
-  const project = useLoaderData({ from: "/_protected/projects/$projectId" });
-  const selectedDialect = (project.dialect as Dialect) || "general";
-  const [generatedSQL, setGeneratedSQL] = useState("");
+  const { design } = useDesign()
+  const project = useLoaderData({ from: '/_protected/projects/$projectId' })
+  const selectedDialect = (project.dialect as Dialect) || 'general'
+  const [generatedSQL, setGeneratedSQL] = useState('')
 
   const handleGenerateSQL = () => {
     try {
-      const sql = generateSQL({ design, dialect: selectedDialect });
-      setGeneratedSQL(sql);
-      toast.success("SQL generated successfully!");
+      const sql = generateSQL({ design, dialect: selectedDialect })
+      setGeneratedSQL(sql)
+      toast.success('SQL generated successfully!')
     } catch (error) {
-      console.error("Failed to generate SQL:", error);
-      toast.error("Failed to generate SQL. Please check your design.");
+      console.error('Failed to generate SQL:', error)
+      toast.error('Failed to generate SQL. Please check your design.')
     }
-  };
+  }
 
   const handleCopySQL = async () => {
     try {
-      await navigator.clipboard.writeText(generatedSQL);
-      toast.success("SQL copied to clipboard!");
+      await navigator.clipboard.writeText(generatedSQL)
+      toast.success('SQL copied to clipboard!')
     } catch (error) {
-      console.error("Failed to copy SQL:", error);
-      toast.error("Failed to copy SQL to clipboard.");
+      console.error('Failed to copy SQL:', error)
+      toast.error('Failed to copy SQL to clipboard.')
     }
-  };
+  }
 
   const handleDownloadSQL = () => {
     try {
-      const blob = new Blob([generatedSQL], { type: "text/sql" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `export_${selectedDialect}_${new Date().toISOString().split('T')[0]}.sql`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast.success("SQL file downloaded!");
+      const blob = new Blob([generatedSQL], { type: 'text/sql' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `export_${selectedDialect}_${new Date().toISOString().split('T')[0]}.sql`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      toast.success('SQL file downloaded!')
     } catch (error) {
-      console.error("Failed to download SQL:", error);
-      toast.error("Failed to download SQL file.");
+      console.error('Failed to download SQL:', error)
+      toast.error('Failed to download SQL file.')
     }
-  };
+  }
 
-  const hasDesignData = design.tables.length > 0;
+  const hasDesignData = design.tables.length > 0
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -73,23 +73,20 @@ function RouteComponent() {
           <CardTitle>SQL Export</CardTitle>
           <CardDescription>
             Generate SQL DDL statements for your database design.
-            {selectedDialect !== "general" && (
-              <> Target dialect: {dialectOptions.find(d => d.value === selectedDialect)?.label}</>
+            {selectedDialect !== 'general' && (
+              <> Target dialect: {dialectOptions.find((d) => d.value === selectedDialect)?.label}</>
             )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button 
-            onClick={handleGenerateSQL} 
-            disabled={!hasDesignData}
-            className="w-full"
-          >
+          <Button onClick={handleGenerateSQL} disabled={!hasDesignData} className="w-full">
             Generate SQL
           </Button>
 
           {!hasDesignData && (
             <p className="text-sm text-muted-foreground">
-              No tables found in your design. Please add tables in the Workbench or Tables section first.
+              No tables found in your design. Please add tables in the Workbench or Tables section
+              first.
             </p>
           )}
         </CardContent>
@@ -111,9 +108,10 @@ function RouteComponent() {
                 </Button>
               </div>
             </CardTitle>
-            {selectedDialect !== "general" && (
+            {selectedDialect !== 'general' && (
               <CardDescription>
-                SQL DDL statements for {dialectOptions.find(d => d.value === selectedDialect)?.label}
+                SQL DDL statements for{' '}
+                {dialectOptions.find((d) => d.value === selectedDialect)?.label}
               </CardDescription>
             )}
           </CardHeader>
@@ -128,5 +126,5 @@ function RouteComponent() {
         </Card>
       )}
     </div>
-  );
+  )
 }

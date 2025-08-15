@@ -1,64 +1,59 @@
-import { AppSidebar, type SidebarItem } from "@/components/common/app-sidebar";
-import { Button } from "@/components/ui/button";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { DesignProvider } from "@/hooks/use-design";
-import { fetchProject } from "@/lib/client";
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import {
   ArrowLeftIcon,
   DownloadIcon,
+  LinkIcon,
   PencilRulerIcon,
   SparklesIcon,
   TableIcon,
-  LinkIcon,
-} from "lucide-react";
+} from 'lucide-react'
+import { AppSidebar, type SidebarItem } from '@/components/common/app-sidebar'
+import { Button } from '@/components/ui/button'
+import { SidebarProvider } from '@/components/ui/sidebar'
+import { DesignProvider } from '@/hooks/use-design'
+import { fetchProject } from '@/lib/client'
 
-export const Route = createFileRoute("/_protected/projects/$projectId")({
+export const Route = createFileRoute('/_protected/projects/$projectId')({
   component: RouteComponent,
   loader: async ({ params }) => {
-    return fetchProject(params.projectId);
+    return fetchProject(params.projectId)
   },
   onError: (error) => {
-    console.error("Failed to load project:", error);
-    throw redirect({ to: "/projects" });
+    console.error('Failed to load project:', error)
+    throw redirect({ to: '/projects' })
   },
-});
+})
 
 const items: SidebarItem[] = [
   {
-    title: "Workbench",
+    title: 'Workbench',
     icon: PencilRulerIcon,
-    url: "/projects/$projectId/workbench",
+    url: '/projects/$projectId/workbench',
   },
   {
-    title: "Tables",
+    title: 'Tables',
     icon: TableIcon,
-    url: "/projects/$projectId/tables",
+    url: '/projects/$projectId/tables',
   },
   {
-    title: "Relationships",
+    title: 'Relationships',
     icon: LinkIcon,
-    url: "/projects/$projectId/relationships",
+    url: '/projects/$projectId/relationships',
   },
   {
-    title: "Ai",
+    title: 'Ai',
     icon: SparklesIcon,
-    url: "/projects/$projectId/ai",
+    url: '/projects/$projectId/ai',
   },
   {
-    title: "Export",
+    title: 'Export',
     icon: DownloadIcon,
-    url: "/projects/$projectId/export",
+    url: '/projects/$projectId/export',
   },
-];
+]
 
 function RouteComponent() {
-  const project = Route.useLoaderData();
+  const project = Route.useLoaderData()
   return (
     <DesignProvider>
       <SidebarProvider>
@@ -75,9 +70,7 @@ function RouteComponent() {
               <h3 className="scroll-m-20 border-b pb-2 text-2xl text-center font-semibold tracking-tight first:mt-0">
                 {project?.name}
                 {project?.description && (
-                  <p className="text-muted-foreground text-sm">
-                    {project.description}
-                  </p>
+                  <p className="text-muted-foreground text-sm">{project.description}</p>
                 )}
               </h3>
             </>
@@ -88,5 +81,5 @@ function RouteComponent() {
         </main>
       </SidebarProvider>
     </DesignProvider>
-  );
+  )
 }

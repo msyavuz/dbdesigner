@@ -1,2 +1,2 @@
-export { AppRouter } from "./router";
-export { AppProviders } from "./providers";
+export { AppProviders } from './providers'
+export { AppRouter } from './router'
