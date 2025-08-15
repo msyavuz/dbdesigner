@@ -1,13 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
-import '@xyflow/react/dist/style.css'
-import { ReactFlow } from '@xyflow/react'
-import { WorkbenchControls } from '@/features/workbench/components/workbench-controls'
-import { useWorkbench } from '@/features/workbench/hooks/use-workbench'
-import { edgeTypes, nodeTypes } from '@/lib/utils'
+import { createFileRoute } from "@tanstack/react-router";
+import "@xyflow/react/dist/style.css";
+import { ReactFlow } from "@xyflow/react";
+import { WorkbenchControls } from "@/features/workbench/components/workbench-controls";
+import { useWorkbench } from "@/features/workbench/hooks/use-workbench";
+import { edgeTypes, nodeTypes } from "@/lib/utils";
 
-export const Route = createFileRoute('/_protected/projects/$projectId/workbench/')({
+export const Route = createFileRoute(
+  "/_protected/projects/$projectId/workbench/"
+)({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const {
@@ -21,7 +23,7 @@ function RouteComponent() {
     isClean,
     saveDesign,
     toggleFullscreen,
-  } = useWorkbench()
+  } = useWorkbench();
 
   return (
     <div className="h-full w-full">
@@ -44,5 +46,5 @@ function RouteComponent() {
         toggleFullscreen={toggleFullscreen}
       />
     </div>
-  )
+  );
 }

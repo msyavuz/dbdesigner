@@ -4,9 +4,9 @@ import {
   type EdgeProps,
   getBezierPath,
   useReactFlow,
-} from '@xyflow/react'
-import { TrashIcon } from 'lucide-react'
-import type { ForeignKey } from 'shared'
+} from "@xyflow/react";
+import { TrashIcon } from "lucide-react";
+import type { ForeignKey } from "shared";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -16,8 +16,8 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
-import { useDesign } from '@/hooks/use-design'
+} from "@/components/ui/context-menu";
+import { useDesign } from "@/hooks/use-design";
 
 export function RelationshipEdge({
   id,
@@ -31,8 +31,8 @@ export function RelationshipEdge({
   markerEnd,
   label,
 }: EdgeProps) {
-  const { design, updateDesign } = useDesign()
-  const { setEdges } = useReactFlow()
+  const { design, updateDesign } = useDesign();
+  const { setEdges } = useReactFlow();
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -41,26 +41,28 @@ export function RelationshipEdge({
     targetX,
     targetY,
     targetPosition,
-  })
+  });
 
-  const relationship = design.relationships.find((rel) => rel.id === id)
+  const relationship = design.relationships.find((rel) => rel.id === id);
 
   const handleDelete = () => {
-    const newRelationships = design.relationships.filter((rel) => rel.id !== id)
-    updateDesign({ relationships: newRelationships })
+    const newRelationships = design.relationships.filter(
+      (rel) => rel.id !== id
+    );
+    updateDesign({ relationships: newRelationships });
 
-    setEdges((edges) => edges.filter((edge) => edge.id !== id))
-  }
+    setEdges((edges) => edges.filter((edge) => edge.id !== id));
+  };
 
-  const handleChangeOnDelete = (newOnDelete: ForeignKey['onDelete']) => {
+  const handleChangeOnDelete = (newOnDelete: ForeignKey["onDelete"]) => {
     const updatedRelationships = design.relationships.map((rel) =>
       rel.id === id ? { ...rel, onDelete: newOnDelete } : rel
-    )
-    updateDesign({ relationships: updatedRelationships })
-  }
+    );
+    updateDesign({ relationships: updatedRelationships });
+  };
 
   if (!relationship) {
-    return null
+    return null;
   }
 
   return (
@@ -69,10 +71,10 @@ export function RelationshipEdge({
       <EdgeLabelRenderer>
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 12,
-            pointerEvents: 'all',
+            pointerEvents: "all",
           }}
           className="nodrag nopan"
         >
@@ -84,23 +86,25 @@ export function RelationshipEdge({
             </ContextMenuTrigger>
             <ContextMenuContent>
               <ContextMenuSub>
-                <ContextMenuSubTrigger>On Delete: {relationship.onDelete}</ContextMenuSubTrigger>
+                <ContextMenuSubTrigger>
+                  On Delete: {relationship.onDelete}
+                </ContextMenuSubTrigger>
                 <ContextMenuSubContent>
                   <ContextMenuItem
-                    onClick={() => handleChangeOnDelete('set null')}
-                    disabled={relationship.onDelete === 'set null'}
+                    onClick={() => handleChangeOnDelete("set null")}
+                    disabled={relationship.onDelete === "set null"}
                   >
                     Set Null
                   </ContextMenuItem>
                   <ContextMenuItem
-                    onClick={() => handleChangeOnDelete('cascade')}
-                    disabled={relationship.onDelete === 'cascade'}
+                    onClick={() => handleChangeOnDelete("cascade")}
+                    disabled={relationship.onDelete === "cascade"}
                   >
                     Cascade
                   </ContextMenuItem>
                   <ContextMenuItem
-                    onClick={() => handleChangeOnDelete('restrict')}
-                    disabled={relationship.onDelete === 'restrict'}
+                    onClick={() => handleChangeOnDelete("restrict")}
+                    disabled={relationship.onDelete === "restrict"}
                   >
                     Restrict
                   </ContextMenuItem>
@@ -116,5 +120,5 @@ export function RelationshipEdge({
         </div>
       </EdgeLabelRenderer>
     </>
-  )
+  );
 }

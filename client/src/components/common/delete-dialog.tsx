@@ -1,5 +1,5 @@
-import { useEffect, useId, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { useEffect, useId, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +7,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export interface DeleteConfirmationDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  title: string
-  description?: string
-  onConfirm: () => void
-  isLoading?: boolean
-  itemName?: string
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description?: string;
+  onConfirm: () => void;
+  isLoading?: boolean;
+  itemName?: string;
 }
 
 export function DeleteConfirmationDialog({
@@ -30,27 +30,27 @@ export function DeleteConfirmationDialog({
   isLoading = false,
   itemName,
 }: DeleteConfirmationDialogProps) {
-  const [confirmText, setConfirmText] = useState('')
-  const confirmInputId = useId()
-  const isConfirmValid = confirmText === 'Delete'
+  const [confirmText, setConfirmText] = useState("");
+  const confirmInputId = useId();
+  const isConfirmValid = confirmText === "Delete";
 
   useEffect(() => {
     if (!open) {
-      setConfirmText('')
+      setConfirmText("");
     }
-  }, [open])
+  }, [open]);
 
   const handleConfirm = () => {
     if (isConfirmValid && !isLoading) {
-      onConfirm()
+      onConfirm();
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && isConfirmValid && !isLoading) {
-      handleConfirm()
+    if (e.key === "Enter" && isConfirmValid && !isLoading) {
+      handleConfirm();
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -59,17 +59,21 @@ export function DeleteConfirmationDialog({
           <DialogTitle className="text-left">{title}</DialogTitle>
           <DialogDescription className="text-left pt-2">
             {description}
-            {itemName && <span className="block mt-2 font-medium text-foreground">{itemName}</span>}
+            {itemName && (
+              <span className="block mt-2 font-medium text-foreground">
+                {itemName}
+              </span>
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor={confirmInputId} className="text-sm font-medium">
-              Type{' '}
+              Type{" "}
               <span className="font-mono bg-muted px-1 py-0.5 rounded text-red-600 dark:text-red-400">
                 Delete
-              </span>{' '}
+              </span>{" "}
               to confirm
             </Label>
             <Input
@@ -86,7 +90,11 @@ export function DeleteConfirmationDialog({
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
           <Button
@@ -94,10 +102,10 @@ export function DeleteConfirmationDialog({
             onClick={handleConfirm}
             disabled={!isConfirmValid || isLoading}
           >
-            {isLoading ? 'Deleting...' : 'Delete'}
+            {isLoading ? "Deleting..." : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,16 +1,16 @@
 import { Hono } from "hono";
+import { cache } from "hono/cache";
 import { cors } from "hono/cors";
-import { authMiddlewareHandler } from "./middlewares";
-import {
-  authRouter,
-  docsRouter,
-  projectsRouter,
-  aiRouter,
-  healthRouter,
-} from "./routers";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { cache } from "hono/cache";
+import { authMiddlewareHandler } from "./middlewares";
+import {
+  aiRouter,
+  authRouter,
+  docsRouter,
+  healthRouter,
+  projectsRouter,
+} from "./routers";
 
 export type Bindings = {
   DB_FILE_NAME: string;
@@ -28,13 +28,13 @@ const app = new Hono<{
       exposeHeaders: ["Content-Length"],
       maxAge: 600,
       credentials: true,
-    }),
+    })
   )
   .use(logger())
   .use(prettyJSON())
   .use(
     "*",
-    cache({ cacheName: "dbdesigner-cache", cacheControl: "max-age=3600" }),
+    cache({ cacheName: "dbdesigner-cache", cacheControl: "max-age=3600" })
   )
   .options("*", (c) => c.text("OK"))
   .route("/health", healthRouter)

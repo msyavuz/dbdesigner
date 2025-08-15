@@ -102,6 +102,7 @@
         "zod": "^4.0.5",
       },
       "devDependencies": {
+        "@biomejs/biome": "^2.2.0",
         "@types/bun": "latest",
         "@types/pg": "^8.11.10",
         "@vitest/ui": "^3.2.4",

@@ -1,24 +1,28 @@
 import OpenAI from "openai";
+import { env } from "./env";
 
 let _aiClient: OpenAI | null = null;
 
 export const getAiClient = (): OpenAI => {
   if (!_aiClient) {
     // In test environment, return a mock client
-    if (process.env.NODE_ENV === 'test') {
+    if (env.NODE_ENV === "test") {
       return {
         responses: {
           create: async () => ({
             async *[Symbol.asyncIterator]() {
-              yield { type: 'response.output_text.delta', delta: 'Mock AI response' };
-            }
-          })
-        }
-      } as any;
+              yield {
+                type: "response.output_text.delta",
+                delta: "Mock AI response",
+              };
+            },
+          }),
+        },
+      } as unknown as OpenAI;
     }
-    
+
     _aiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: env.OPENAI_API_KEY,
     });
   }
   return _aiClient;

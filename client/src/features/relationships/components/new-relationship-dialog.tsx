@@ -1,10 +1,10 @@
-import { PlusIcon } from 'lucide-react'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import type { ForeignKey } from 'shared'
-import { toast } from 'sonner'
-import { v7 as randomUUIDv7 } from 'uuid'
-import { Button } from '@/components/ui/button'
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import type { ForeignKey } from "shared";
+import { toast } from "sonner";
+import { v7 as randomUUIDv7 } from "uuid";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -22,42 +22,42 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useDesign } from '@/hooks/use-design'
+} from "@/components/ui/select";
+import { useDesign } from "@/hooks/use-design";
 
 type FormData = {
-  fromTable: string
-  fromColumn: string
-  toTable: string
-  toColumn: string
-  onDelete: 'cascade' | 'restrict' | 'set null'
-}
+  fromTable: string;
+  fromColumn: string;
+  toTable: string;
+  toColumn: string;
+  onDelete: "cascade" | "restrict" | "set null";
+};
 
 export function NewRelationshipDialog() {
-  const { design, updateDesign } = useDesign()
-  const [open, setOpen] = useState(false)
+  const { design, updateDesign } = useDesign();
+  const [open, setOpen] = useState(false);
 
   const form = useForm<FormData>({
     defaultValues: {
-      fromTable: '',
-      fromColumn: '',
-      toTable: '',
-      toColumn: '',
-      onDelete: 'set null',
+      fromTable: "",
+      fromColumn: "",
+      toTable: "",
+      toColumn: "",
+      onDelete: "set null",
     },
-  })
+  });
 
   const getTableColumns = (tableId: string) => {
-    const table = design.tables.find((t) => t.id === tableId)
-    return table?.columns || []
-  }
+    const table = design.tables.find((t) => t.id === tableId);
+    return table?.columns || [];
+  };
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -68,32 +68,32 @@ export function NewRelationshipDialog() {
         toTable: data.toTable,
         toColumn: data.toColumn,
         onDelete: data.onDelete,
-      }
+      };
 
       updateDesign({
         relationships: [...design.relationships, newRelationship],
-      })
+      });
 
-      setOpen(false)
-      form.reset()
-      toast.success('Relationship created successfully')
+      setOpen(false);
+      form.reset();
+      toast.success("Relationship created successfully");
     } catch (_error) {
-      toast.error('Failed to create relationship. Please try again.')
+      toast.error("Failed to create relationship. Please try again.");
     }
-  }
+  };
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       form.reset({
-        fromTable: '',
-        fromColumn: '',
-        toTable: '',
-        toColumn: '',
-        onDelete: 'set null',
-      })
+        fromTable: "",
+        fromColumn: "",
+        toTable: "",
+        toColumn: "",
+        onDelete: "set null",
+      });
     }
-    setOpen(isOpen)
-  }
+    setOpen(isOpen);
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -120,8 +120,8 @@ export function NewRelationshipDialog() {
                     <FormControl>
                       <Select
                         onValueChange={(value) => {
-                          field.onChange(value)
-                          form.setValue('fromColumn', '') // Reset column when table changes
+                          field.onChange(value);
+                          form.setValue("fromColumn", ""); // Reset column when table changes
                         }}
                         value={field.value}
                       >
@@ -149,16 +149,21 @@ export function NewRelationshipDialog() {
                   <FormItem>
                     <FormLabel>From Column</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select column" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getTableColumns(form.watch('fromTable')).map((column) => (
-                            <SelectItem key={column.id} value={column.id}>
-                              {column.name}
-                            </SelectItem>
-                          ))}
+                          {getTableColumns(form.watch("fromTable")).map(
+                            (column) => (
+                              <SelectItem key={column.id} value={column.id}>
+                                {column.name}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -178,8 +183,8 @@ export function NewRelationshipDialog() {
                     <FormControl>
                       <Select
                         onValueChange={(value) => {
-                          field.onChange(value)
-                          form.setValue('toColumn', '') // Reset column when table changes
+                          field.onChange(value);
+                          form.setValue("toColumn", ""); // Reset column when table changes
                         }}
                         value={field.value}
                       >
@@ -207,16 +212,21 @@ export function NewRelationshipDialog() {
                   <FormItem>
                     <FormLabel>To Column</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select column" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getTableColumns(form.watch('toTable')).map((column) => (
-                            <SelectItem key={column.id} value={column.id}>
-                              {column.name}
-                            </SelectItem>
-                          ))}
+                          {getTableColumns(form.watch("toTable")).map(
+                            (column) => (
+                              <SelectItem key={column.id} value={column.id}>
+                                {column.name}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -261,5 +271,5 @@ export function NewRelationshipDialog() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

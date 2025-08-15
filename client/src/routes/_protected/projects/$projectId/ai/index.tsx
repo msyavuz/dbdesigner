@@ -1,41 +1,41 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Bot, Send, User } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Textarea } from '@/components/ui/textarea'
-import { fetchAIConversation, sendAIMessage } from '@/lib/client'
-import { cn } from '@/lib/utils'
+import { createFileRoute } from "@tanstack/react-router";
+import { Bot, Send, User } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { fetchAIConversation, sendAIMessage } from "@/lib/client";
+import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute('/_protected/projects/$projectId/ai/')({
+export const Route = createFileRoute("/_protected/projects/$projectId/ai/")({
   component: RouteComponent,
-})
+});
 
 interface Message {
-  role: 'user' | 'assistant'
-  content: string
-  id: string
+  role: "user" | "assistant";
+  content: string;
+  id: string;
 }
 
 function RouteComponent() {
-  const { projectId } = Route.useParams()
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { projectId } = Route.useParams();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     const loadConversation = async () => {
       try {
-        const data = await fetchAIConversation(projectId)
+        const data = await fetchAIConversation(projectId);
         if (data.conversations && data.conversations.length > 0) {
           const formattedMessages: Message[] = data.conversations.map(
             (msg: { role: string; content: string }, index: number) => ({
@@ -43,63 +43,73 @@ function RouteComponent() {
               role: msg.role,
               content: msg.content,
             })
-          )
-          setMessages(formattedMessages)
+          );
+          setMessages(formattedMessages);
         }
       } catch (error) {
-        console.error('Failed to load conversation history:', error)
+        console.error("Failed to load conversation history:", error);
       }
-    }
+    };
 
-    loadConversation()
-  }, [projectId])
+    loadConversation();
+  }, [projectId]);
 
   useEffect(() => {
-    scrollToBottom()
-  }, [scrollToBottom])
+    scrollToBottom();
+  }, [scrollToBottom]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim() || isLoading) return
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    const userMessage = input.trim()
-    setInput('')
-    setError(null)
-    setIsLoading(true)
+    const userMessage = input.trim();
+    setInput("");
+    setError(null);
+    setIsLoading(true);
 
-    const userMessageId = crypto.randomUUID()
-    const assistantMessageId = crypto.randomUUID()
+    const userMessageId = crypto.randomUUID();
+    const assistantMessageId = crypto.randomUUID();
 
-    setMessages((prev) => [...prev, { role: 'user', content: userMessage, id: userMessageId }])
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: userMessage, id: userMessageId },
+    ]);
 
     try {
-      let assistantContent = ''
-      setMessages((prev) => [...prev, { role: 'assistant', content: '', id: assistantMessageId }])
+      let assistantContent = "";
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "", id: assistantMessageId },
+      ]);
 
-      console.log('Sending AI message:', userMessage)
-      const stream = sendAIMessage(projectId, userMessage)
+      console.log("Sending AI message:", userMessage);
+      const stream = sendAIMessage(projectId, userMessage);
 
       for await (const chunk of stream) {
-        assistantContent += chunk
+        assistantContent += chunk;
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.id === assistantMessageId ? { ...msg, content: assistantContent } : msg
+            msg.id === assistantMessageId
+              ? { ...msg, content: assistantContent }
+              : msg
           )
-        )
+        );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
-      setMessages((prev) => prev.filter((msg) => msg.id !== assistantMessageId))
+      setError(err instanceof Error ? err.message : "An error occurred");
+      setMessages((prev) =>
+        prev.filter((msg) => msg.id !== assistantMessageId)
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && (!e.metaKey || !e.ctrlKey)) {
-      handleSubmit(e)
+    if (e.key === "Enter" && (!e.metaKey || !e.ctrlKey)) {
+      handleSubmit(e);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -108,7 +118,9 @@ function RouteComponent() {
           <Bot className="w-5 h-5" />
           AI Assistant
         </h2>
-        <p className="text-sm text-muted-foreground">Ask questions about your database design</p>
+        <p className="text-sm text-muted-foreground">
+          Ask questions about your database design
+        </p>
       </div>
 
       <ScrollArea className="flex-1 overflow-hidden" ref={scrollAreaRef}>
@@ -125,11 +137,11 @@ function RouteComponent() {
               <div
                 key={message.id}
                 className={cn(
-                  'flex gap-3',
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                  "flex gap-3",
+                  message.role === "user" ? "justify-end" : "justify-start"
                 )}
               >
-                {message.role === 'assistant' && (
+                {message.role === "assistant" && (
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                       <Bot className="w-4 h-4" />
@@ -139,30 +151,34 @@ function RouteComponent() {
 
                 <div
                   className={cn(
-                    'max-w-[70%] rounded-lg p-3',
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground ml-auto'
-                      : 'bg-muted'
+                    "max-w-[70%] rounded-lg p-3",
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground ml-auto"
+                      : "bg-muted"
                   )}
                 >
-                  {message.role === 'assistant' && message.content === '' && isLoading ? (
+                  {message.role === "assistant" &&
+                  message.content === "" &&
+                  isLoading ? (
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-current rounded-full animate-pulse"></div>
                       <div
                         className="w-2 h-2 bg-current rounded-full animate-pulse"
-                        style={{ animationDelay: '0.1s' }}
+                        style={{ animationDelay: "0.1s" }}
                       ></div>
                       <div
                         className="w-2 h-2 bg-current rounded-full animate-pulse"
-                        style={{ animationDelay: '0.2s' }}
+                        style={{ animationDelay: "0.2s" }}
                       ></div>
                     </div>
                   ) : (
-                    <Markdown remarkPlugins={[remarkGfm]}>{message.content}</Markdown>
+                    <Markdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </Markdown>
                   )}
                 </div>
 
-                {message.role === 'user' && (
+                {message.role === "user" && (
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                       <User className="w-4 h-4" />
@@ -203,5 +219,5 @@ function RouteComponent() {
         </div>
       </form>
     </div>
-  )
+  );
 }

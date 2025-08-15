@@ -15,7 +15,7 @@ describe("Auth Router", () => {
         headers: new Headers({
           "Content-Type": "application/json",
         }),
-      },
+      }
     );
     const response = await app.request(request);
 

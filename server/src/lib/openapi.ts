@@ -3,7 +3,8 @@ export const openApiDoc = {
   info: {
     title: "DBDesigner API Documentation",
     version: "1.0.0",
-    description: "API Documentation for dbdesigner - A database design and management tool",
+    description:
+      "API Documentation for dbdesigner - A database design and management tool",
   },
   servers: [
     {

@@ -1,4 +1,4 @@
-name: Client Biome Check
+name: Server Biome Check
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   biome-check:
-    name: Client Biome Lint & Format Check
+    name: Server Biome Lint & Format Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,4 +25,4 @@ jobs:
         run: cd shared && bun run build
         
       - name: Run Biome check
-        run: cd client && bun run check
+        run: cd server && bun run check

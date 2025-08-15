@@ -1,20 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { PlusIcon } from 'lucide-react'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { UserProfile } from '@/features/auth/components/user-profile'
-import { ProjectCard } from '@/features/projects/components/project-card'
-import { ProjectDialog, ProjectDialogMode } from '@/features/projects/components/project-dialog'
-import { fetchProjects } from '@/lib/client'
+import { createFileRoute } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { UserProfile } from "@/features/auth/components/user-profile";
+import { ProjectCard } from "@/features/projects/components/project-card";
+import {
+  ProjectDialog,
+  ProjectDialogMode,
+} from "@/features/projects/components/project-dialog";
+import { fetchProjects } from "@/lib/client";
 
-export const Route = createFileRoute('/_protected/projects/')({
+export const Route = createFileRoute("/_protected/projects/")({
   component: RouteComponent,
   loader: fetchProjects,
-})
+});
 
 function RouteComponent() {
-  const projects = Route.useLoaderData()
-  const [openProjectDialog, setOpenProjectDialog] = useState(false)
+  const projects = Route.useLoaderData();
+  const [openProjectDialog, setOpenProjectDialog] = useState(false);
   return (
     <main className="flex h-screen w-full flex-col overflow-hidden p-12">
       <div className="flex justify-between">
@@ -40,5 +43,5 @@ function RouteComponent() {
         setOpen={setOpenProjectDialog}
       />
     </main>
-  )
+  );
 }

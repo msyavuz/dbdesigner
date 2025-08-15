@@ -1,4 +1,4 @@
-import { Link, type LinkProps } from '@tanstack/react-router'
+import { Link, type LinkProps } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -9,19 +9,19 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
-import { UserProfile } from '@/features/auth/components/user-profile'
+} from "@/components/ui/sidebar";
+import { UserProfile } from "@/features/auth/components/user-profile";
 
 export type SidebarItem = {
-  title: string
-  icon: React.ComponentType
-  url: LinkProps['to']
-}
+  title: string;
+  icon: React.ComponentType;
+  url: LinkProps["to"];
+};
 
 type AppSidebarProps = {
-  items?: Array<SidebarItem>
-  header?: React.ReactNode
-}
+  items?: Array<SidebarItem>;
+  header?: React.ReactNode;
+};
 
 export function AppSidebar({ items, header }: AppSidebarProps) {
   return (
@@ -37,7 +37,7 @@ export function AppSidebar({ items, header }: AppSidebarProps) {
                     <Link
                       to={item.url}
                       activeProps={{
-                        className: 'bg-accent text-accent-foreground',
+                        className: "bg-accent text-accent-foreground",
                       }}
                     >
                       <item.icon />
@@ -54,5 +54,5 @@ export function AppSidebar({ items, header }: AppSidebarProps) {
         <UserProfile />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

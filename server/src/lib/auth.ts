@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
-import { openAPI } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { openAPI } from "better-auth/plugins";
 import { db } from "../db";
 import * as authSchema from "../db/schemas/auth-schema";
 

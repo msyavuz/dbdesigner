@@ -1,11 +1,11 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useLoaderData } from '@tanstack/react-router'
-import { useState } from 'react'
-import { type FieldErrors, useFieldArray, useForm } from 'react-hook-form'
-import { type TableValues, tableSchema } from 'shared'
-import { toast } from 'sonner'
-import { v7 as randomUUIDv7 } from 'uuid'
-import { Button } from '@/components/ui/button'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoaderData } from "@tanstack/react-router";
+import { useState } from "react";
+import { type FieldErrors, useFieldArray, useForm } from "react-hook-form";
+import { type TableValues, tableSchema } from "shared";
+import { toast } from "sonner";
+import { v7 as randomUUIDv7 } from "uuid";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -23,57 +23,57 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { useDesign } from '@/hooks/use-design'
-import { ColumnsDataTable } from './columns-table'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useDesign } from "@/hooks/use-design";
+import { ColumnsDataTable } from "./columns-table";
 
 export function NewTableDialog() {
-  const project = useLoaderData({ from: '/_protected/projects/$projectId' })
+  const project = useLoaderData({ from: "/_protected/projects/$projectId" });
   const form = useForm<TableValues>({
     resolver: zodResolver(tableSchema),
     defaultValues: {
       id: randomUUIDv7(),
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       columns: [],
     },
-  })
+  });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: 'columns',
-  })
+    name: "columns",
+  });
 
-  const { updateDesign, design } = useDesign()
-  const [open, setOpen] = useState(false)
+  const { updateDesign, design } = useDesign();
+  const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: TableValues) => {
     updateDesign({
       tables: [...design.tables, { ...data, position: { x: 0, y: 0 } }],
-    })
-    setOpen(false)
-  }
+    });
+    setOpen(false);
+  };
 
   const onError = (errors: FieldErrors<TableValues>) => {
     toast.error(
       `Error creating table: ${Object.values(errors)
         .map((error) => error.message)
-        .join(', ')}`
-    )
-  }
+        .join(", ")}`
+    );
+  };
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       form.reset({
         id: randomUUIDv7(),
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         columns: [],
-      })
+      });
     }
-    setOpen(isOpen)
-  }
+    setOpen(isOpen);
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -84,12 +84,15 @@ export function NewTableDialog() {
         <DialogHeader>
           <DialogTitle>New table</DialogTitle>
           <DialogDescription>
-            Create a new table for your database. Set name and description and define columns. You
-            can add relationships in the workbench.
+            Create a new table for your database. Set name and description and
+            define columns. You can add relationships in the workbench.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit, onError)}>
+          <form
+            className="space-y-6"
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+          >
             <FormField
               control={form.control}
               name="name"
@@ -147,5 +150,5 @@ export function NewTableDialog() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

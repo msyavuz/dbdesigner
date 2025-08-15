@@ -1,16 +1,16 @@
+import { zValidator } from "@hono/zod-validator";
+import { and, eq } from "drizzle-orm";
+import { Hono } from "hono";
+import {
+  createDefaultDesign,
+  generateSQL,
+  newProjectSchema,
+  updateProjectSchema,
+} from "shared";
+import { z } from "zod";
 import { db } from "../db";
 import { projects } from "../db/schemas/projects-schema";
 import type { WithAuth } from "../lib/types";
-import { Hono } from "hono";
-import { and, eq } from "drizzle-orm";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import {
-  createDefaultDesign,
-  newProjectSchema,
-  updateProjectSchema,
-  generateSQL,
-} from "shared";
 
 export const projectIdSchema = z.object({
   id: z.uuidv7(),
@@ -35,7 +35,7 @@ export const projectsRouter = new Hono<WithAuth>()
     if (result.length === 0) {
       return c.json(
         { error: "Project not found or you do not have access" },
-        { status: 404 },
+        { status: 404 }
       );
     }
     return c.json({ message: "Project deleted successfully" }, { status: 200 });
@@ -52,7 +52,7 @@ export const projectsRouter = new Hono<WithAuth>()
     if (!data[0]) {
       return c.json(
         { error: "Project not found or you do not have access" },
-        { status: 404 },
+        { status: 404 }
       );
     }
     return c.json(data[0], { status: 200 });
@@ -80,14 +80,14 @@ export const projectsRouter = new Hono<WithAuth>()
       if (result.length === 0) {
         return c.json(
           { error: "Project not found or you do not have access" },
-          { status: 404 },
+          { status: 404 }
         );
       }
       return c.json(
         { message: "Project updated successfully", project: result[0] },
-        { status: 200 },
+        { status: 200 }
       );
-    },
+    }
   )
   .post("/", zValidator("json", newProjectSchema), async (c) => {
     const data = c.req.valid("json");
@@ -110,7 +110,7 @@ export const projectsRouter = new Hono<WithAuth>()
 
     return c.json(
       { message: "Project created successfully", project: result },
-      { status: 201 },
+      { status: 201 }
     );
   })
   .get("/:id/export/sql", zValidator("param", projectIdSchema), async (c) => {
@@ -126,20 +126,20 @@ export const projectsRouter = new Hono<WithAuth>()
     if (!project[0]) {
       return c.json(
         { error: "Project not found or you do not have access" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     const sql = generateSQL({
-      design: project[0].design as any,
-      dialect: project[0].dialect as any,
+      design: project[0].design,
+      dialect: project[0].dialect,
     });
 
     // Set headers for file download
     c.header("Content-Type", "text/plain");
     c.header(
       "Content-Disposition",
-      `attachment; filename="${project[0].name}.sql"`,
+      `attachment; filename="${project[0].name}.sql"`
     );
 
     return c.text(sql);

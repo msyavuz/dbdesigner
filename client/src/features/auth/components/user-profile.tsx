@@ -1,9 +1,17 @@
-import { useNavigate } from '@tanstack/react-router'
-import { Bell, ChevronDown, CreditCard, LogOut, Settings, Shield, User } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { ModeToggle } from '@/components/theme/mode-toggle'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { useNavigate } from "@tanstack/react-router";
+import {
+  Bell,
+  ChevronDown,
+  CreditCard,
+  LogOut,
+  Settings,
+  Shield,
+  User,
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { ModeToggle } from "@/components/theme/mode-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,30 +20,33 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Skeleton } from '@/components/ui/skeleton'
-import { signOut, useSession } from '@/lib/auth-client'
+} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { signOut, useSession } from "@/lib/auth-client";
 
 interface UserProfileProps {
-  extraMenuItems?: ReactNode
-  className?: string
+  extraMenuItems?: ReactNode;
+  className?: string;
 }
 
-export function UserProfile({ extraMenuItems, className = '' }: UserProfileProps) {
+export function UserProfile({
+  extraMenuItems,
+  className = "",
+}: UserProfileProps) {
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
-      .slice(0, 2)
-  }
+      .slice(0, 2);
+  };
 
-  const { data, isPending } = useSession()
+  const { data, isPending } = useSession();
 
-  const user = data?.user
+  const user = data?.user;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Handle loading state
   if (isPending) {
@@ -47,17 +58,17 @@ export function UserProfile({ extraMenuItems, className = '' }: UserProfileProps
           <Skeleton className="h-3 w-32" />
         </div>
       </div>
-    )
+    );
   }
 
   if (!user) {
-    navigate({ to: '/auth/login' })
-    return null
+    navigate({ to: "/auth/login" });
+    return null;
   }
 
   async function onSignOut() {
-    await signOut()
-    navigate({ to: '/auth/login' })
+    await signOut();
+    navigate({ to: "/auth/login" });
   }
 
   // TODO: Implement these functions to handle navigation or actions
@@ -70,18 +81,28 @@ export function UserProfile({ extraMenuItems, className = '' }: UserProfileProps
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={`relative h-10 w-auto justify-start px-2 ${className}`}>
+        <Button
+          variant="ghost"
+          className={`relative h-10 w-auto justify-start px-2 ${className}`}
+        >
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user.image || '/placeholder.svg'} alt={user.name || 'User'} />
-              <AvatarFallback className="text-xs">{getInitials(user.name || 'U')}</AvatarFallback>
+              <AvatarImage
+                src={user.image || "/placeholder.svg"}
+                alt={user.name || "User"}
+              />
+              <AvatarFallback className="text-xs">
+                {getInitials(user.name || "U")}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start text-left">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">{user.name}</span>
               </div>
               {user.email && (
-                <span className="text-xs text-muted-foreground hidden sm:block">{user.email}</span>
+                <span className="text-xs text-muted-foreground hidden sm:block">
+                  {user.email}
+                </span>
               )}
             </div>
             <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
@@ -93,7 +114,9 @@ export function UserProfile({ extraMenuItems, className = '' }: UserProfileProps
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.name}</p>
             {user.email && (
-              <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {user.email}
+              </p>
             )}
           </div>
         </DropdownMenuLabel>
@@ -130,5 +153,5 @@ export function UserProfile({ extraMenuItems, className = '' }: UserProfileProps
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

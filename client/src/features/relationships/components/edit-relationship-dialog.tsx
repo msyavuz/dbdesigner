@@ -1,9 +1,9 @@
-import { EditIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import type { ForeignKey } from 'shared'
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
+import { EditIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import type { ForeignKey } from "shared";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -21,31 +21,33 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useDesign } from '@/hooks/use-design'
+} from "@/components/ui/select";
+import { useDesign } from "@/hooks/use-design";
 
 interface EditRelationshipDialogProps {
-  relationship: ForeignKey
+  relationship: ForeignKey;
 }
 
 type FormData = {
-  fromTable: string
-  fromColumn: string
-  toTable: string
-  toColumn: string
-  onDelete?: 'cascade' | 'restrict' | 'set null'
-}
+  fromTable: string;
+  fromColumn: string;
+  toTable: string;
+  toColumn: string;
+  onDelete?: "cascade" | "restrict" | "set null";
+};
 
-export function EditRelationshipDialog({ relationship }: EditRelationshipDialogProps) {
-  const { design, updateDesign } = useDesign()
-  const [open, setOpen] = useState(false)
+export function EditRelationshipDialog({
+  relationship,
+}: EditRelationshipDialogProps) {
+  const { design, updateDesign } = useDesign();
+  const [open, setOpen] = useState(false);
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -53,9 +55,9 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
       fromColumn: relationship.fromColumn,
       toTable: relationship.toTable,
       toColumn: relationship.toColumn,
-      onDelete: relationship.onDelete || 'set null',
+      onDelete: relationship.onDelete || "set null",
     },
-  })
+  });
 
   useEffect(() => {
     if (open) {
@@ -64,15 +66,15 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
         fromColumn: relationship.fromColumn,
         toTable: relationship.toTable,
         toColumn: relationship.toColumn,
-        onDelete: relationship.onDelete || 'set null',
-      })
+        onDelete: relationship.onDelete || "set null",
+      });
     }
-  }, [open, relationship, form])
+  }, [open, relationship, form]);
 
   const getTableColumns = (tableId: string) => {
-    const table = design.tables.find((t) => t.id === tableId)
-    return table?.columns || []
-  }
+    const table = design.tables.find((t) => t.id === tableId);
+    return table?.columns || [];
+  };
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -87,18 +89,18 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
               onDelete: data.onDelete,
             }
           : rel
-      )
+      );
 
       updateDesign({
         relationships: updatedRelationships,
-      })
+      });
 
-      setOpen(false)
-      toast.success('Relationship updated successfully')
+      setOpen(false);
+      toast.success("Relationship updated successfully");
     } catch (_error) {
-      toast.error('Failed to update relationship. Please try again.')
+      toast.error("Failed to update relationship. Please try again.");
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -110,7 +112,9 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Edit Relationship</DialogTitle>
-          <DialogDescription>Update the foreign key relationship between tables.</DialogDescription>
+          <DialogDescription>
+            Update the foreign key relationship between tables.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -122,7 +126,10 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
                   <FormItem>
                     <FormLabel>From Table</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select table" />
                         </SelectTrigger>
@@ -147,16 +154,21 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
                   <FormItem>
                     <FormLabel>From Column</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select column" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getTableColumns(form.watch('fromTable')).map((column) => (
-                            <SelectItem key={column.id} value={column.id}>
-                              {column.name}
-                            </SelectItem>
-                          ))}
+                          {getTableColumns(form.watch("fromTable")).map(
+                            (column) => (
+                              <SelectItem key={column.id} value={column.id}>
+                                {column.name}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -174,7 +186,10 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
                   <FormItem>
                     <FormLabel>To Table</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select table" />
                         </SelectTrigger>
@@ -199,16 +214,21 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
                   <FormItem>
                     <FormLabel>To Column</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select column" />
                         </SelectTrigger>
                         <SelectContent>
-                          {getTableColumns(form.watch('toTable')).map((column) => (
-                            <SelectItem key={column.id} value={column.id}>
-                              {column.name}
-                            </SelectItem>
-                          ))}
+                          {getTableColumns(form.watch("toTable")).map(
+                            (column) => (
+                              <SelectItem key={column.id} value={column.id}>
+                                {column.name}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -253,5 +273,5 @@ export function EditRelationshipDialog({ relationship }: EditRelationshipDialogP
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { relations, sql } from "drizzle-orm";
-import { user } from "./auth-schema";
+import { relations } from "drizzle-orm";
+import { jsonb, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import type { Design } from "shared";
-import { pgTable, text, jsonb, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { user } from "./auth-schema";
 
 export const dialectEnum = pgEnum("dialect", [
   "general",

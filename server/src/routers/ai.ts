@@ -1,13 +1,13 @@
 import { zValidator } from "@hono/zod-validator";
-import type { WithAuth } from "@server/lib/types";
-import { Hono } from "hono";
-import { streamText } from "hono/streaming";
-import { projectIdSchema } from "./projects";
-import { getAiClient, getInitialPrompt } from "@server/lib/ai";
 import { db } from "@server/db";
 import { projects } from "@server/db/schemas/projects-schema";
+import { getAiClient, getInitialPrompt } from "@server/lib/ai";
+import type { WithAuth } from "@server/lib/types";
 import { eq } from "drizzle-orm";
+import { Hono } from "hono";
+import { streamText } from "hono/streaming";
 import { z } from "zod";
+import { projectIdSchema } from "./projects";
 
 const newMessageSchema = z.object({
   message: z.string(),
@@ -25,7 +25,7 @@ export const aiRouter = new Hono<WithAuth>()
     if (!data[0]) {
       return c.json(
         { error: "Project not found or you do not have access" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -35,7 +35,7 @@ export const aiRouter = new Hono<WithAuth>()
 
     // Filter out system messages for frontend display
     const userConversations = conversations.filter(
-      (msg: any) => msg.role !== "system",
+      (msg: { role: string }) => msg.role !== "system"
     );
 
     return c.json({ conversations: userConversations });
@@ -56,7 +56,7 @@ export const aiRouter = new Hono<WithAuth>()
       if (!data[0]) {
         return c.json(
           { error: "Project not found or you do not have access" },
-          { status: 404 },
+          { status: 404 }
         );
       }
       const design = data[0].design;
@@ -108,5 +108,5 @@ export const aiRouter = new Hono<WithAuth>()
           })
           .where(eq(projects.id, projectId));
       });
-    },
+    }
   );
