@@ -2,8 +2,8 @@ import { Edge, Node } from "@xyflow/react";
 import { clsx, type ClassValue } from "clsx";
 import { Design, ForeignKey, Table } from "shared";
 import { twMerge } from "tailwind-merge";
-import { merge } from "lodash/fp";
 import { TableNode } from "@/features/workbench/components/table-node";
+import { RelationshipEdge } from "@/features/workbench/components/relationship-edge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,7 +36,7 @@ export function designToEdges(design: Design): Edge[] {
       sourceHandle: `source.${rel.fromTable}.${rel.fromColumn}`,
       targetHandle: `target.${rel.toTable}.${rel.toColumn}`,
       label: `${fromTable?.name}.${fromColumnName} → ${toTable?.name}.${toColumnName}`,
-      type: "default",
+      type: "relationship",
     };
   });
 }
@@ -93,13 +93,18 @@ export const newDesignFromNodesAndEdges = (
 ): Design => {
   const newTables = nodesToDesign(nodes, initialDesign.tables);
   const newRelationships = edgesToDesign(edges, initialDesign.relationships);
-  const newDesign = merge(initialDesign, {
+  const newDesign = {
+    ...initialDesign,
     tables: newTables,
     relationships: newRelationships,
-  });
+  };
   return newDesign;
 };
 
 export const nodeTypes = {
   table: TableNode,
+};
+
+export const edgeTypes = {
+  relationship: RelationshipEdge,
 };

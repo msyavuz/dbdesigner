@@ -1,19 +1,19 @@
 {
   "version": "7",
-  "dialect": "sqlite",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "6",
-      "when": 1753531316583,
-      "tag": "0000_sad_tombstone",
+      "version": "7",
+      "when": 1755197457446,
+      "tag": "0000_yielding_gunslinger",
       "breakpoints": true
     },
     {
       "idx": 1,
-      "version": "6",
-      "when": 1754771992397,
-      "tag": "0001_jittery_white_tiger",
+      "version": "7",
+      "when": 1755268427777,
+      "tag": "0001_broad_rogue",
       "breakpoints": true
     }
   ]

@@ -5,8 +5,12 @@ import { Hono } from "hono";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { newProjectSchema, updateProjectSchema } from "shared";
-import { defaultDesign } from "@server/utils";
+import {
+  createDefaultDesign,
+  newProjectSchema,
+  updateProjectSchema,
+  generateSQL,
+} from "shared";
 
 export const projectIdSchema = z.object({
   id: z.uuidv7(),
@@ -67,8 +71,8 @@ export const projectsRouter = new Hono<WithAuth>()
         .set({
           name: payload.name,
           description: payload.description || "",
+          dialect: payload.dialect,
           design: payload.design,
-          updatedAt: new Date().toISOString(),
         })
         .where(and(eq(projects.id, id), eq(projects.createdBy, userId)))
         .returning();
@@ -91,8 +95,9 @@ export const projectsRouter = new Hono<WithAuth>()
     const newProjectPayload = {
       name: data.name,
       description: data.description || "",
+      dialect: data.dialect,
       createdBy: userId,
-      design: JSON.stringify(defaultDesign),
+      design: createDefaultDesign(),
     };
     const [result] = await db
       .insert(projects)
@@ -107,4 +112,35 @@ export const projectsRouter = new Hono<WithAuth>()
       { message: "Project created successfully", project: result },
       { status: 201 },
     );
+  })
+  .get("/:id/export/sql", zValidator("param", projectIdSchema), async (c) => {
+    const userId = c.get("user").id;
+    const id = c.req.param("id");
+
+    const project = await db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.id, id), eq(projects.createdBy, userId)))
+      .limit(1);
+
+    if (!project[0]) {
+      return c.json(
+        { error: "Project not found or you do not have access" },
+        { status: 404 },
+      );
+    }
+
+    const sql = generateSQL({
+      design: project[0].design as any,
+      dialect: project[0].dialect as any,
+    });
+
+    // Set headers for file download
+    c.header("Content-Type", "text/plain");
+    c.header(
+      "Content-Disposition",
+      `attachment; filename="${project[0].name}.sql"`,
+    );
+
+    return c.text(sql);
   });

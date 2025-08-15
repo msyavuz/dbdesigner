@@ -10,7 +10,7 @@ import {
 } from "./routers";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { showRoutes } from "hono/dev";
+import { cache } from "hono/cache";
 
 export type Bindings = {
   DB_FILE_NAME: string;
@@ -32,6 +32,10 @@ const app = new Hono<{
   )
   .use(logger())
   .use(prettyJSON())
+  .use(
+    "*",
+    cache({ cacheName: "dbdesigner-cache", cacheControl: "max-age=3600" }),
+  )
   .options("*", (c) => c.text("OK"))
   .route("/health", healthRouter)
   .route("/", authRouter)

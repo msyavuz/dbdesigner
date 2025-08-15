@@ -13,7 +13,6 @@ vi.mock("@mantine/hooks");
 
 const mockDesign: Design = {
   id: "design1",
-  name: "Test Design",
   tables: [
     {
       id: "table1",
@@ -149,4 +148,3 @@ describe("useWorkbench", () => {
     );
   });
 });
-

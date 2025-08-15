@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { v7 as randomUUIDv7 } from "uuid";
 import { getColumns } from "./columns-utils";
-import { Column, TableValues } from "shared";
+import { Column, TableValues, Dialect } from "shared";
 import {
   Control,
   UseFieldArrayAppend,
@@ -27,6 +27,7 @@ interface ColumnsDataTableProps {
   append: UseFieldArrayAppend<TableValues>;
   remove: UseFieldArrayRemove;
   control: Control<TableValues>;
+  dialect?: Dialect;
 }
 
 export function ColumnsDataTable({
@@ -34,10 +35,11 @@ export function ColumnsDataTable({
   append,
   remove,
   control,
+  dialect,
 }: ColumnsDataTableProps) {
   const columns = useMemo(
-    () => getColumns({ control, remove }),
-    [control, remove],
+    () => getColumns({ control, remove, dialect }),
+    [control, remove, dialect],
   );
 
   const table = useReactTable({
@@ -113,7 +115,7 @@ export function ColumnsDataTable({
               <Button
                 type="button"
                 onClick={() => {
-                  append({ ...defaultColumn });
+                  append(defaultColumn);
                 }}
               >
                 Add column

@@ -12,17 +12,20 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import { Control, UseFieldArrayRemove } from "react-hook-form";
-import { Column, sqlTypes, TableValues } from "shared";
+import { Column, sqlTypes, TableValues, Dialect, getTypesForDialect } from "shared";
 
 interface GetColumnsProps {
   control: Control<TableValues>;
   remove: UseFieldArrayRemove;
+  dialect?: Dialect;
 }
 
 export const getColumns = ({
   control,
   remove,
+  dialect = "general",
 }: GetColumnsProps): Array<ColumnDef<Column, unknown>> => {
+  const availableTypes = getTypesForDialect(dialect);
   return [
     {
       accessorKey: "name",
@@ -67,7 +70,7 @@ export const getColumns = ({
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {sqlTypes.map((type) => (
+                      {availableTypes.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type.charAt(0).toUpperCase() + type.slice(1)}
                         </SelectItem>

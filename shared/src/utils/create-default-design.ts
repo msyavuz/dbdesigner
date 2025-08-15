@@ -1,16 +1,10 @@
 import type { Design } from "..";
+import { v7 } from "uuid";
 
-export function createDefaultDesign(
-  projectId: string,
-  name: string,
-  description: string,
-): Design {
+export function createDefaultDesign(): Design {
   return {
-    id: projectId,
-    name,
-    description,
+    id: v7(),
     tables: [],
     relationships: [],
-    exampleData: {},
   };
 }

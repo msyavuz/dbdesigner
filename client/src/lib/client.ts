@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import { hcWithType } from "server/dist/client";
+import type { Design } from "shared";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
@@ -39,6 +40,7 @@ export const fetchProject = async (projectId: string) => {
 export const createProject = async (data: {
   name: string;
   description?: string;
+  dialect?: string;
 }) => {
   const response = await client.projects.$post({
     json: data,
@@ -67,7 +69,7 @@ export const deleteProject = async (projectId: string) => {
 
 export const updateProject = async (
   projectId: string,
-  data: { name?: string; description?: string; design?: string },
+  data: { name?: string; description?: string; dialect?: string; design?: Design },
 ) => {
   const response = await client.projects[":id"].$put({
     param: { id: projectId },
@@ -123,4 +125,37 @@ export const sendAIMessage = async function* (
   } finally {
     reader.releaseLock();
   }
+};
+
+export const exportProjectSQL = async (projectId: string) => {
+  const response = await client.projects[":id"]["export"]["sql"].$get({
+    param: { id: projectId },
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to export SQL: ${response.statusText}`);
+  }
+  
+  // Get the filename from Content-Disposition header
+  const contentDisposition = response.headers.get('Content-Disposition');
+  let filename = 'database.sql';
+  if (contentDisposition) {
+    const match = contentDisposition.match(/filename="(.+)"/);
+    if (match) {
+      filename = match[1];
+    }
+  }
+  
+  // Get the SQL content
+  const sql = await response.text();
+  
+  // Create and trigger download
+  const blob = new Blob([sql], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
 };

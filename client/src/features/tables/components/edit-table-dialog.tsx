@@ -11,9 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ColumnsDataTable } from "./columns-table";
-import { Design, tableSchema, TableValues } from "shared";
+import { tableSchema, TableValues } from "shared";
 import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
-import { v7 as randomUUIDv7 } from "uuid";
 import {
   Form,
   FormControl,
@@ -24,20 +23,20 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDesign } from "@/hooks/use-design";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useLoaderData } from "@tanstack/react-router";
+import { EditIcon } from "lucide-react";
 
-export function NewTableDialog() {
+interface EditTableDialogProps {
+  table: TableValues;
+}
+
+export function EditTableDialog({ table }: EditTableDialogProps) {
   const project = useLoaderData({ from: "/_protected/projects/$projectId" });
   const form = useForm<TableValues>({
     resolver: zodResolver(tableSchema),
-    defaultValues: {
-      id: randomUUIDv7(),
-      name: "",
-      description: "",
-      columns: [],
-    },
+    defaultValues: table,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -48,44 +47,45 @@ export function NewTableDialog() {
   const { updateDesign, design } = useDesign();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (open) {
+      form.reset(table);
+    }
+  }, [open, table, form]);
+
   const onSubmit = async (data: TableValues) => {
+    const updatedTables = design.tables.map((t) =>
+      t.id === table.id ? { ...data, position: t.position } : t,
+    );
+
     updateDesign({
-      tables: [...design.tables, { ...data, position: { x: 0, y: 0 } }],
+      tables: updatedTables,
     });
     setOpen(false);
+    toast.success("Table updated successfully");
   };
 
   const onError = (errors: FieldErrors<TableValues>) => {
     toast.error(
-      `Error creating table: ${Object.values(errors)
+      `Error updating table: ${Object.values(errors)
         .map((error) => error.message)
         .join(", ")}`,
     );
   };
 
-  const handleOpenChange = (isOpen: boolean) => {
-    if (isOpen) {
-      form.reset({
-        id: randomUUIDv7(),
-        name: "",
-        description: "",
-        columns: [],
-      });
-    }
-    setOpen(isOpen);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type="button">New table</Button>
+        <Button variant="secondary" size="icon">
+          <EditIcon />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:min-w-[740px]">
         <DialogHeader>
-          <DialogTitle>New table</DialogTitle>
+          <DialogTitle>Edit table: {table.name}</DialogTitle>
           <DialogDescription>
-            Create a new table for your database. Set name and description and
-            define columns. You can add relationships in the workbench.
+            Update the table details, including name, description, and columns.
+            Relationships will be preserved.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -152,3 +152,4 @@ export function NewTableDialog() {
     </Dialog>
   );
 }
+

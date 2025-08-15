@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { newProjectSchema } from "shared";
+import { newProjectSchema, dialectOptions } from "shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -24,6 +24,13 @@ import { createProject, updateProject } from "@/lib/client";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "@tanstack/react-router";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export enum ProjectDialogMode {
   Create = "create",
@@ -34,6 +41,7 @@ type Project = {
   id: string;
   name: string;
   description?: string;
+  dialect?: string;
 };
 
 type CommonProjectDialogProps = {
@@ -58,6 +66,7 @@ export function ProjectDialog(props: ProjectDialogProps) {
     defaultValues: {
       name: mode === "edit" ? props.project.name : "",
       description: mode === "edit" ? props.project.description : "",
+      dialect: mode === "edit" ? (props.project.dialect as any) || "general" : "general",
     },
   });
 
@@ -114,6 +123,30 @@ export function ProjectDialog(props: ProjectDialogProps) {
                   <FormLabel>Project description</FormLabel>
                   <FormControl>
                     <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dialect"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Database dialect</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a dialect" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {dialectOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

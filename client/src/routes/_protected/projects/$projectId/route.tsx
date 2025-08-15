@@ -11,9 +11,11 @@ import {
 } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
+  DownloadIcon,
   PencilRulerIcon,
   SparklesIcon,
   TableIcon,
+  LinkIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_protected/projects/$projectId")({
@@ -39,9 +41,19 @@ const items: SidebarItem[] = [
     url: "/projects/$projectId/tables",
   },
   {
+    title: "Relationships",
+    icon: LinkIcon,
+    url: "/projects/$projectId/relationships",
+  },
+  {
     title: "Ai",
     icon: SparklesIcon,
     url: "/projects/$projectId/ai",
+  },
+  {
+    title: "Export",
+    icon: DownloadIcon,
+    url: "/projects/$projectId/export",
   },
 ];
 

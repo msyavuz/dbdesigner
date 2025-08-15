@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import "@xyflow/react/dist/style.css";
-import { nodeTypes } from "@/lib/utils";
+import { nodeTypes, edgeTypes } from "@/lib/utils";
 import { WorkbenchControls } from "@/features/workbench/components/workbench-controls";
 import { useWorkbench } from "@/features/workbench/hooks/use-workbench";
 import { ReactFlow } from "@xyflow/react";
@@ -32,6 +32,7 @@ function RouteComponent() {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
