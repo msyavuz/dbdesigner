@@ -12,7 +12,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import { Control, UseFieldArrayRemove } from "react-hook-form";
-import { Column, sqlTypes, TableValues, Dialect, getTypesForDialect } from "shared";
+import { Column, TableValues, Dialect, getTypesForDialect } from "shared";
 
 interface GetColumnsProps {
   control: Control<TableValues>;

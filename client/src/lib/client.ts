@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { hcWithType } from "server/dist/client";
-import type { Design } from "shared";
+import type { Design, Dialect } from "shared";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
@@ -40,7 +40,7 @@ export const fetchProject = async (projectId: string) => {
 export const createProject = async (data: {
   name: string;
   description?: string;
-  dialect?: string;
+  dialect?: Dialect;
 }) => {
   const response = await client.projects.$post({
     json: data,
@@ -69,7 +69,7 @@ export const deleteProject = async (projectId: string) => {
 
 export const updateProject = async (
   projectId: string,
-  data: { name?: string; description?: string; dialect?: string; design?: Design },
+  data: { name?: string; description?: string; dialect?: Dialect; design?: Design },
 ) => {
   const response = await client.projects[":id"].$put({
     param: { id: projectId },

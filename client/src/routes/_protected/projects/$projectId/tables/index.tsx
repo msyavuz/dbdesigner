@@ -10,15 +10,52 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EditTableDialog } from "@/features/tables/components/edit-table-dialog";
+import { NewTableDialog } from "@/features/tables/components/new-table-dialog";
+import { TrashIcon } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
-export const Route = createFileRoute(
-  "/_protected/projects/$projectId/tables/",
-)({
-  component: RouteComponent,
-});
+export const Route = createFileRoute("/_protected/projects/$projectId/tables/")(
+  {
+    component: RouteComponent,
+  },
+);
 
 function RouteComponent() {
-  const { design } = useDesign();
+  const { design, updateDesign } = useDesign();
+
+  const handleDeleteTable = async (tableId: string, tableName: string) => {
+    try {
+      // Remove the table
+      const updatedTables = design.tables.filter((t) => t.id !== tableId);
+
+      // Remove any relationships that reference this table
+      const updatedRelationships = design.relationships.filter(
+        (rel) => rel.fromTable !== tableId && rel.toTable !== tableId,
+      );
+
+      await updateDesign({
+        tables: updatedTables,
+        relationships: updatedRelationships,
+      });
+
+      toast.success(`Table "${tableName}" deleted successfully`);
+    } catch (error) {
+      toast.error("Failed to delete table. Please try again.");
+    }
+  };
 
   return (
     <div className="h-full w-full p-6 overflow-auto">
@@ -30,8 +67,12 @@ function RouteComponent() {
               View and manage your database tables
             </p>
           </div>
-          <div className="text-sm text-muted-foreground">
-            {design.tables.length} table{design.tables.length !== 1 ? "s" : ""}
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {design.tables.length} table
+              {design.tables.length !== 1 ? "s" : ""}
+            </div>
+            <NewTableDialog />
           </div>
         </div>
 
@@ -51,10 +92,46 @@ function RouteComponent() {
             {design.tables.map((table) => (
               <Card key={table.id}>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {table.name}
-                    <Badge variant="outline">{table.columns.length} columns</Badge>
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      {table.name}
+                      <Badge variant="outline">
+                        {table.columns.length} columns
+                      </Badge>
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <EditTableDialog table={table} />
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="icon">
+                            <TrashIcon className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Table</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete the table "
+                              {table.name}"? This action cannot be undone and
+                              will also remove any relationships involving this
+                              table.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDeleteTable(table.id, table.name)
+                              }
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
                   {table.description && (
                     <p className="text-muted-foreground">{table.description}</p>
                   )}
@@ -113,3 +190,4 @@ function RouteComponent() {
     </div>
   );
 }
+

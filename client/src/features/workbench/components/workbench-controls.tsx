@@ -5,11 +5,6 @@ import {
   RefreshCwIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useHotkeys, useIdle } from "@mantine/hooks";
 import { NewTableDialog } from "@/features/tables/components/new-table-dialog";
 import { useEffect, useState } from "react";

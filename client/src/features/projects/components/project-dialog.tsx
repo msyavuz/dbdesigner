@@ -8,9 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import z from "zod";
-import { newProjectSchema, dialectOptions } from "shared";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { dialectOptions, type Dialect } from "shared";
 import {
   Form,
   FormControl,
@@ -41,7 +39,7 @@ type Project = {
   id: string;
   name: string;
   description?: string;
-  dialect?: string;
+  dialect?: Dialect;
 };
 
 type CommonProjectDialogProps = {
@@ -59,20 +57,25 @@ type CreateProjectDialogProps = CommonProjectDialogProps & {
 
 type ProjectDialogProps = CreateProjectDialogProps | EditProjectDialogProps;
 
+type FormData = {
+  name: string;
+  description?: string;
+  dialect: Dialect;
+};
+
 export function ProjectDialog(props: ProjectDialogProps) {
   const mode = props.mode;
-  const form = useForm<z.infer<typeof newProjectSchema>>({
-    resolver: zodResolver(newProjectSchema),
+  const form = useForm<FormData>({
     defaultValues: {
       name: mode === "edit" ? props.project.name : "",
       description: mode === "edit" ? props.project.description : "",
-      dialect: mode === "edit" ? (props.project.dialect as any) || "general" : "general",
+      dialect: mode === "edit" ? (props.project.dialect || "general") : "general",
     },
   });
 
   const router = useRouter();
 
-  async function onSubmit(data: z.infer<typeof newProjectSchema>) {
+  async function onSubmit(data: FormData) {
     switch (mode) {
       case ProjectDialogMode.Create:
         await createProject(data);

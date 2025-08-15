@@ -52,7 +52,7 @@ export function nodesToDesign(
 }
 
 export function edgesToDesign(
-  edges: { id: string; source: string; target: string }[],
+  edges: Edge[],
   prevRelationships: ForeignKey[],
 ): ForeignKey[] {
   // Map existing relationships by id for quick lookup
@@ -60,15 +60,22 @@ export function edgesToDesign(
 
   return edges.map((edge) => {
     const existing = relMap.get(edge.id);
-    return existing
-      ? existing
-      : {
-          id: edge.id,
-          fromTable: edge.source,
-          fromColumn: "", // You may want to fill this in if you have the info
-          toTable: edge.target,
-          toColumn: "", // You may want to fill this in if you have the info
-        };
+    if (existing) {
+      return existing;
+    }
+    
+    // Extract column IDs from handles if this is a new edge
+    const sourceColumnId = edge.sourceHandle?.split(".")[2] || "";
+    const targetColumnId = edge.targetHandle?.split(".")[2] || "";
+    
+    return {
+      id: edge.id,
+      fromTable: edge.source,
+      fromColumn: sourceColumnId,
+      toTable: edge.target,
+      toColumn: targetColumnId,
+      onDelete: "set null" as const,
+    };
   });
 }
 

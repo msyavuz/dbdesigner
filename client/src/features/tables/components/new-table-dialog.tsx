@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ColumnsDataTable } from "./columns-table";
-import { Design, tableSchema, TableValues } from "shared";
+import { tableSchema, TableValues } from "shared";
 import { FieldErrors, useFieldArray, useForm } from "react-hook-form";
 import { v7 as randomUUIDv7 } from "uuid";
 import {

@@ -10,6 +10,22 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EditRelationshipDialog } from "@/features/relationships/components/edit-relationship-dialog";
+import { NewRelationshipDialog } from "@/features/relationships/components/new-relationship-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { TrashIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute(
   "/_protected/projects/$projectId/relationships/",
@@ -18,7 +34,23 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { design } = useDesign();
+  const { design, updateDesign } = useDesign();
+
+  const handleDeleteRelationship = async (relationshipId: string) => {
+    try {
+      const updatedRelationships = design.relationships.filter(
+        (rel) => rel.id !== relationshipId,
+      );
+
+      await updateDesign({
+        relationships: updatedRelationships,
+      });
+
+      toast.success("Relationship deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete relationship. Please try again.");
+    }
+  };
 
   const getTableName = (tableId: string) => {
     const table = design.tables.find((t) => t.id === tableId);
@@ -41,8 +73,12 @@ function RouteComponent() {
               View and manage foreign key relationships between tables
             </p>
           </div>
-          <div className="text-sm text-muted-foreground">
-            {design.relationships.length} relationship{design.relationships.length !== 1 ? "s" : ""}
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {design.relationships.length} relationship
+              {design.relationships.length !== 1 ? "s" : ""}
+            </div>
+            <NewRelationshipDialog />
           </div>
         </div>
 
@@ -50,9 +86,12 @@ function RouteComponent() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center py-12">
-                <h3 className="text-lg font-semibold mb-2">No relationships found</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  No relationships found
+                </h3>
                 <p className="text-muted-foreground">
-                  Create foreign key relationships in the Workbench to see them here.
+                  Create foreign key relationships in the Workbench to see them
+                  here.
                 </p>
               </div>
             </CardContent>
@@ -71,6 +110,7 @@ function RouteComponent() {
                     <TableHead>To Table</TableHead>
                     <TableHead>To Column</TableHead>
                     <TableHead>On Delete</TableHead>
+                    <TableHead className="w-24">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -81,7 +121,10 @@ function RouteComponent() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary">
-                          {getColumnName(relationship.fromTable, relationship.fromColumn)}
+                          {getColumnName(
+                            relationship.fromTable,
+                            relationship.fromColumn,
+                          )}
                         </Badge>
                       </TableCell>
                       <TableCell className="font-medium">
@@ -89,7 +132,10 @@ function RouteComponent() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary">
-                          {getColumnName(relationship.toTable, relationship.toColumn)}
+                          {getColumnName(
+                            relationship.toTable,
+                            relationship.toColumn,
+                          )}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -100,6 +146,40 @@ function RouteComponent() {
                         ) : (
                           <span className="text-muted-foreground">—</span>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <EditRelationshipDialog relationship={relationship} />
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="destructive" size="icon">
+                                <TrashIcon className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete Relationship
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete this
+                                  relationship? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    handleDeleteRelationship(relationship.id)
+                                  }
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -112,3 +192,4 @@ function RouteComponent() {
     </div>
   );
 }
+
