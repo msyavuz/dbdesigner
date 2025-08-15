@@ -9,6 +9,21 @@ jobs:
   test:
     name: Server Unit Tests
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,4 +40,6 @@ jobs:
         run: cd shared && bun run build
         
       - name: Run unit tests
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
         run: cd server && bun run test
