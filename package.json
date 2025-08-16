@@ -1,6 +1,6 @@
 {
   "name": "dbdesigner",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A visual database design application built with Bun, Hono, Vite, and React",
   "author": "Mehmet Salih Yavuz",
   "license": "MIT",
