@@ -35,7 +35,7 @@ export function TableNode({ data: { table } }: NodeProps<TableNode>) {
     updateDesign(newDesign);
   };
   return (
-    <Card className="w-72 h-64">
+    <Card className="w-72 min-h-64">
       <CardHeader>
         <CardTitle>{table.name}</CardTitle>
         {table.description && (
