@@ -23,18 +23,18 @@ const app = new Hono<{
   .use(
     "*",
     cors({
-      origin: "http://localhost:5173",
+      origin: (x) => x,
       allowHeaders: ["Content-Type", "Authorization"],
       exposeHeaders: ["Content-Length"],
       maxAge: 600,
       credentials: true,
-    })
+    }),
   )
   .use(logger())
   .use(prettyJSON())
   .use(
     "*",
-    cache({ cacheName: "dbdesigner-cache", cacheControl: "max-age=3600" })
+    cache({ cacheName: "dbdesigner-cache", cacheControl: "max-age=3600" }),
   )
   .options("*", (c) => c.text("OK"))
   .route("/health", healthRouter)

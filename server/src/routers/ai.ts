@@ -8,6 +8,7 @@ import { Hono } from "hono";
 import { streamText } from "hono/streaming";
 import { z } from "zod";
 import { projectIdSchema } from "./projects";
+import type { Message } from "openai/resources/beta/threads.mjs";
 
 const newMessageSchema = z.object({
   message: z.string(),
@@ -25,7 +26,7 @@ export const aiRouter = new Hono<WithAuth>()
     if (!data[0]) {
       return c.json(
         { error: "Project not found or you do not have access" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -35,7 +36,7 @@ export const aiRouter = new Hono<WithAuth>()
 
     // Filter out system messages for frontend display
     const userConversations = conversations.filter(
-      (msg: { role: string }) => msg.role !== "system"
+      (msg: { role: string }) => msg.role !== "system",
     );
 
     return c.json({ conversations: userConversations });
@@ -56,13 +57,16 @@ export const aiRouter = new Hono<WithAuth>()
       if (!data[0]) {
         return c.json(
           { error: "Project not found or you do not have access" },
-          { status: 404 }
+          { status: 404 },
         );
       }
       const design = data[0].design;
       const initialPrompt = getInitialPrompt(JSON.stringify(design));
-      const previousConversations = JSON.parse(data[0].aiConversation);
-      if (previousConversations.length === 0) {
+      const previousConversations: {
+        role: "system" | "user" | "assistant";
+        content: string;
+      }[] = [];
+      if (!data[0].aiConversation) {
         previousConversations.push({
           role: "system",
           content: initialPrompt,
@@ -108,5 +112,5 @@ export const aiRouter = new Hono<WithAuth>()
           })
           .where(eq(projects.id, projectId));
       });
-    }
+    },
   );

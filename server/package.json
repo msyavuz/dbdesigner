@@ -28,7 +28,6 @@
     "drizzle-orm": "^0.44.2",
     "hono": "^4.7.11",
     "openai": "^5.12.2",
-    "pg-native": "^3.5.2",
     "shared": "workspace:*",
     "zod": "^4.0.5"
   },
