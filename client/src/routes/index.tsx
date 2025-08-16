@@ -1,9 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Database } from "lucide-react";
 import { Button } from "../components/ui/button";
+import { isAuthenticated } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/")({
   component: App,
+  beforeLoad: async () => {
+    const authenticated = await isAuthenticated();
+    switch (authenticated) {
+      case true:
+        throw redirect({ to: "/projects" });
+      case false:
+        throw redirect({ to: "/auth/login" });
+    }
+  },
 });
 
 function App() {

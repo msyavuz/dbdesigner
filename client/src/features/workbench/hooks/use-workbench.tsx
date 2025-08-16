@@ -22,13 +22,17 @@ import {
 export function useWorkbench() {
   const { theme } = useTheme();
   const { design, updateDesign } = useDesign();
-  const [nodes, setNodes] = useState(designToNodes(design));
-  const [edges, setEdges] = useState(designToEdges(design));
+  const [nodes, setNodes] = useState(() => designToNodes(design));
+  const [edges, setEdges] = useState(() => designToEdges(design));
+  
   const newDesign: Design = newDesignFromNodesAndEdges(nodes, edges, design);
 
   useEffect(() => {
-    setNodes(designToNodes(design));
-    setEdges(designToEdges(design));
+    const newNodes = designToNodes(design);
+    const newEdges = designToEdges(design);
+    
+    setNodes(newNodes);
+    setEdges(newEdges);
   }, [design]);
 
   const isClean = !isDesignChanged(design, newDesign);

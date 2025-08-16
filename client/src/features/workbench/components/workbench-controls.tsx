@@ -40,7 +40,9 @@ export function WorkbenchControls({
     [
       "mod + s",
       () => {
-        handleSave();
+        if (saveStatus === "unsaved") {
+          handleSave();
+        }
       },
     ],
   ]);

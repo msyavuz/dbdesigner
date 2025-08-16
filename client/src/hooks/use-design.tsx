@@ -16,7 +16,13 @@ const DesignContext = createContext<{
 
 export const DesignProvider = ({ children }: PropsWithChildren) => {
   const data = useLoaderData({ from: "/_protected/projects/$projectId" });
-  const [design, setDesign] = useState<Design>(createDefaultDesign());
+  const [design, setDesign] = useState<Design>(() => {
+    if (data.design) {
+      const defaultDesign = createDefaultDesign();
+      return { ...defaultDesign, ...data.design };
+    }
+    return createDefaultDesign();
+  });
 
   useEffect(() => {
     if (data.design) {
